@@ -39,9 +39,6 @@ const AuthContext = createContext({
   method: 'firebase',
   login: () => Promise.resolve(),
   register: () => Promise.resolve(),
-  loginWithGoogle: () => Promise.resolve(),
-  loginWithFaceBook: () => Promise.resolve(),
-  loginWithTwitter: () => Promise.resolve(),
   logout: () => Promise.resolve()
 });
 
@@ -84,21 +81,6 @@ function AuthProvider({ children }) {
   );
 
   const login = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
-
-  const loginWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    return firebase.auth().signInWithPopup(provider);
-  };
-
-  const loginWithFaceBook = () => {
-    const provider = new firebase.auth.FacebookAuthProvider();
-    return firebase.auth().signInWithPopup(provider);
-  };
-
-  const loginWithTwitter = () => {
-    const provider = new firebase.auth.TwitterAuthProvider();
-    return firebase.auth().signInWithPopup(provider);
-  };
 
   const register = (email, password, firstName, lastName) =>
     firebase
@@ -148,9 +130,6 @@ function AuthProvider({ children }) {
         },
         login,
         register,
-        loginWithGoogle,
-        loginWithFaceBook,
-        loginWithTwitter,
         logout,
         resetPassword
       }}

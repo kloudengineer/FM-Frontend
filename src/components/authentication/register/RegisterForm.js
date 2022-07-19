@@ -27,7 +27,12 @@ export default function RegisterForm() {
     firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().required('Password is required'),
+    companyName: Yup.string().required('Company name is required'),
+    registration: Yup.string().required('Registration is required'),
+    address: Yup.string().required('Address is required'),
+    ein: Yup.string().required('Employee Identification Number (EIN) is required'),
+    dot: Yup.string().required('DOT is required'),
   });
 
   const formik = useFormik({
@@ -35,7 +40,12 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      companyName: '',
+      registration: '',
+      address: '',
+      ein: '',
+      dot: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
@@ -85,6 +95,52 @@ export default function RegisterForm() {
               {...getFieldProps('lastName')}
               error={Boolean(touched.lastName && errors.lastName)}
               helperText={touched.lastName && errors.lastName}
+            />
+          </Stack>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              fullWidth
+              label="Company Name"
+              {...getFieldProps('companyName')}
+              error={Boolean(touched.companyName && errors.companyName)}
+              helperText={touched.companyName && errors.companyName}
+            />
+
+            <TextField
+              fullWidth
+              label="Registration"
+              {...getFieldProps('registration')}
+              error={Boolean(touched.registration && errors.registration)}
+              helperText={touched.registration && errors.registration}
+            />
+          </Stack>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              fullWidth
+              label="Address"
+              {...getFieldProps('address')}
+              error={Boolean(touched.address && errors.address)}
+              helperText={touched.address && errors.address}
+            />
+          </Stack>
+
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              fullWidth
+              label="EIN"
+              {...getFieldProps('ein')}
+              error={Boolean(touched.ein && errors.ein)}
+              helperText={touched.ein && errors.ein}
+            />
+
+            <TextField
+              fullWidth
+              label="DOT"
+              {...getFieldProps('dot')}
+              error={Boolean(touched.dot && errors.dot)}
+              helperText={touched.dot && errors.dot}
             />
           </Stack>
 

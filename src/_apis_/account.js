@@ -31,72 +31,72 @@ const users = [
 
 // ----------------------------------------------------------------------
 
-mock.onPost('/api/account/login').reply(async (config) => {
-  try {
-    await fakeRequest(1000);
+// mock.onPost('/api/account/login').reply(async (config) => {
+//   try {
+//     await fakeRequest(1000);
 
-    const { email, password } = JSON.parse(config.data);
-    const user = users.find((_user) => _user.email === email);
+//     const { email, password } = JSON.parse(config.data);
+//     const user = users.find((_user) => _user.email === email);
 
-    if (!user) {
-      return [400, { message: 'There is no user corresponding to the email address.' }];
-    }
+//     if (!user) {
+//       return [400, { message: 'There is no user corresponding to the email address.' }];
+//     }
 
-    if (user.password !== password) {
-      return [400, { message: 'Wrong password' }];
-    }
+//     if (user.password !== password) {
+//       return [400, { message: 'Wrong password' }];
+//     }
 
-    const accessToken = sign({ userId: user.id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN
-    });
+//     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
+//       expiresIn: JWT_EXPIRES_IN
+//     });
 
-    return [200, { accessToken, user }];
-  } catch (error) {
-    console.error(error);
-    return [500, { message: 'Internal server error' }];
-  }
-});
+//     return [200, { accessToken, user }];
+//   } catch (error) {
+//     console.error(error);
+//     return [500, { message: 'Internal server error' }];
+//   }
+// });
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-mock.onPost('/api/account/register').reply(async (config) => {
-  try {
-    await fakeRequest(1000);
+// mock.onPost('/api/account/register').reply(async (config) => {
+//   try {
+//     await fakeRequest(1000);
 
-    const { email, password, firstName, lastName } = JSON.parse(config.data);
-    let user = users.find((_user) => _user.email === email);
+//     const { email, password, firstName, lastName } = JSON.parse(config.data);
+//     let user = users.find((_user) => _user.email === email);
 
-    if (user) {
-      return [400, { message: 'There already exists an account with the given email address.' }];
-    }
+//     if (user) {
+//       return [400, { message: 'There already exists an account with the given email address.' }];
+//     }
 
-    user = {
-      id: uuidv4(),
-      displayName: `${firstName} ${lastName}`,
-      email,
-      password,
-      photoURL: null,
-      phoneNumber: null,
-      country: null,
-      address: null,
-      state: null,
-      city: null,
-      zipCode: null,
-      about: null,
-      role: 'user',
-      isPublic: true
-    };
+//     user = {
+//       id: uuidv4(),
+//       displayName: `${firstName} ${lastName}`,
+//       email,
+//       password,
+//       photoURL: null,
+//       phoneNumber: null,
+//       country: null,
+//       address: null,
+//       state: null,
+//       city: null,
+//       zipCode: null,
+//       about: null,
+//       role: 'user',
+//       isPublic: true
+//     };
 
-    const accessToken = sign({ userId: user.id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN
-    });
+//     const accessToken = sign({ userId: user.id }, JWT_SECRET, {
+//       expiresIn: JWT_EXPIRES_IN
+//     });
 
-    return [200, { accessToken, user }];
-  } catch (error) {
-    console.error(error);
-    return [500, { message: 'Internal server error' }];
-  }
-});
+//     return [200, { accessToken, user }];
+//   } catch (error) {
+//     console.error(error);
+//     return [500, { message: 'Internal server error' }];
+//   }
+// });
 
 // ----------------------------------------------------------------------
 
