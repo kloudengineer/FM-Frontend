@@ -82,7 +82,7 @@ function AuthProvider({ children }) {
 
   const login = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
 
-  const register = (email, password, firstName, lastName) =>
+  const register = (email, password, firstName, lastName, companyName, registration, address, ein, dot) =>
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -96,8 +96,21 @@ function AuthProvider({ children }) {
             email,
             displayName: `${firstName} ${lastName}`
           });
-      });
-
+      })
+      .then(() => {
+        firebase
+          .firestore()
+          .collection('carriers')
+          .doc()
+          .set({
+            companyName: companyName,
+            registration: registration,
+            address: address,
+            ein: ein,
+            dot: dot
+          })
+      })
+  
   const logout = async () => {
     await firebase.auth().signOut();
   };

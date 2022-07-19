@@ -50,7 +50,7 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await register(values.email, values.password, values.firstName, values.lastName);
+        await register(values.email, values.password, values.firstName, values.lastName, values.companyName, values.registration, values.address, values.ein, values.dot);
         enqueueSnackbar('Register success', {
           variant: 'success',
           action: (key) => (
@@ -98,6 +98,35 @@ export default function RegisterForm() {
             />
           </Stack>
 
+          <TextField
+            fullWidth
+            autoComplete="username"
+            type="email"
+            label="Email address"
+            {...getFieldProps('email')}
+            error={Boolean(touched.email && errors.email)}
+            helperText={touched.email && errors.email}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="current-password"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            {...getFieldProps('password')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            error={Boolean(touched.password && errors.password)}
+            helperText={touched.password && errors.password}
+          />
+
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
@@ -144,34 +173,7 @@ export default function RegisterForm() {
             />
           </Stack>
 
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          />
+          
 
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Register
