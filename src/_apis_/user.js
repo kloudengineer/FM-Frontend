@@ -4,6 +4,17 @@ import mock from './mock';
 import mockData from '../utils/mock-data';
 
 // ----------------------------------------------------------------------
+const staff = [
+  { id: 0, name: 'Abby Anders', role: 'Driver', phoneNumber: '123-456-7890', email: 'abby@gmail.com', isVerified: true, status: 'active'},
+  { id: 1, name: 'Bob Birkin', role: 'Driver', phoneNumber: '240-521-1256', email: 'bob@gmail.com', isVerified: true, status: 'banned'},
+  { id: 2, name: 'Casey Clyde', role: 'Dispatch', phoneNumber: '301-674-2421', email: 'casey@gmail.com', isVerified: true, status: 'active'},
+  { id: 3, name: 'David Durn',  role: 'Support', phoneNumber: '765-412-9864', email: 'david@gmail.com', isVerified: true, status: 'active'},
+  { id: 4, name: 'Eric Engels', role: 'Driver', phoneNumber: '703-231-9750', email: 'eric@gmail.com', isVerified: false, status: 'active'},
+  { id: 5, name: 'Frank Fernandez', role: 'Driver', phoneNumber: '651-421-1164', email: 'frank@gmail.com', isVerified: true, status: 'banned'},
+  { id: 6, name: 'Greg Gregson', role: 'Driver', phoneNumber: '651-942-7124', email: 'greg@gmail.com', isVerified: true, status: 'active'},
+  { id: 7, name: 'Harry Hemm', role: 'Dispatch', phoneNumber: '240-529-4195', email: 'harry@gmail.com', isVerified: true, status: 'active'},
+  { id: 8, name: 'Ingrid Ilk', role: 'Manager', phoneNumber: '651-622-9892', email: 'ingrid@gmail.com', isVerified: true, status: 'active'},
+]
 
 mock.onGet('/api/user/profile').reply(() => {
   const profile = {
@@ -47,24 +58,9 @@ mock.onGet('/api/user/all').reply(() => {
 // ----------------------------------------------------------------------
 
 mock.onGet('/api/user/manage-users').reply(() => {
-  const users = [...Array(24)].map((_, index) => ({
-    id: mockData.id(index),
-    avatarUrl: mockData.image.avatar(index),
-    name: mockData.name.fullName(index),
-    email: mockData.email(index),
-    phoneNumber: mockData.phoneNumber(index),
-    address: '908 Jack Locks',
-    country: mockData.address.country(index),
-    state: 'Virginia',
-    city: 'Rancho Cordova',
-    zipCode: '85807',
-    company: mockData.company(index),
-    isVerified: mockData.boolean(index),
-    status: sample(['active', 'banned']) || 'active',
-    role: mockData.role(index)
-  }));
+  
 
-  return [200, { users }];
+  return [200, { staff }];
 });
 
 // ----------------------------------------------------------------------

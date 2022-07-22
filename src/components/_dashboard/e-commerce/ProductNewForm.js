@@ -106,7 +106,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.eCommerce.list);
+        navigate(PATH_DASHBOARD.root);
       } catch (error) {
         console.error(error);
         setSubmitting(false);

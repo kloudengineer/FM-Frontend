@@ -65,7 +65,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.user.list);
+        navigate(PATH_DASHBOARD.root);
       } catch (error) {
         console.error(error);
         setSubmitting(false);

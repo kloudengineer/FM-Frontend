@@ -51,7 +51,7 @@ const WrapStyle = styled(Link)(({ theme }) => ({
 
 const linkTo = (params, mailId) => {
   const { systemLabel, customLabel } = params;
-  const baseUrl = PATH_DASHBOARD.mail.root;
+  const baseUrl = PATH_DASHBOARD.root;
 
   if (systemLabel) {
     return `${baseUrl}/${systemLabel}/${mailId}`;

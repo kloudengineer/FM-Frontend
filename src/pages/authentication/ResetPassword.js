@@ -9,7 +9,7 @@ import LogoOnlyLayout from '../../layouts/LogoOnlyLayout';
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
-import { ResetPasswordForm } from '../../components/authentication/reset-password';
+import ResetPasswordForm from './components/ResetPasswordForm';
 //
 import { SentIcon } from '../../assets';
 

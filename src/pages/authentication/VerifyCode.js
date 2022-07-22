@@ -10,7 +10,7 @@ import LogoOnlyLayout from '../../layouts/LogoOnlyLayout';
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
-import { VerifyCodeForm } from '../../components/authentication/verify-code';
+import VerifyCodeForm from './components/VerifyCodeForm';
 
 // ----------------------------------------------------------------------
 

@@ -1,14 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
-// utils
-import fakeRequest from '../utils/fakeRequest';
-import { verify, sign } from '../utils/jwt';
+import { verify } from '../utils/jwt';
 //
 import mock from './mock';
 
 // ----------------------------------------------------------------------
 
 const JWT_SECRET = 'minimal-secret-key';
-const JWT_EXPIRES_IN = '5 days';
 
 const users = [
   {

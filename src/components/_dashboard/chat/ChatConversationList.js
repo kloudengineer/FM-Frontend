@@ -29,7 +29,7 @@ export default function ChatConversationList({ conversations, isOpenSidebar, act
       );
       conversationKey = otherParticipant.username;
     }
-    navigate(`${PATH_DASHBOARD.chat.root}/${conversationKey}`);
+    navigate(`${PATH_DASHBOARD.root}/${conversationKey}`);
   };
 
   return (

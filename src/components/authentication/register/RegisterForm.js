@@ -173,8 +173,6 @@ export default function RegisterForm() {
             />
           </Stack>
 
-          
-
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Register
           </LoadingButton>

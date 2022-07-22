@@ -120,6 +120,7 @@ function AuthProvider({ children }) {
   };
 
   const auth = { ...state.user };
+  console.log(auth)
 
   return (
     <AuthContext.Provider

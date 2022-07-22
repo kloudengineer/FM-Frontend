@@ -166,7 +166,7 @@ export default function ProductDetailsSumary() {
         }
         setSubmitting(false);
         handleBuyNow();
-        navigate(PATH_DASHBOARD.eCommerce.checkout);
+        navigate(PATH_DASHBOARD.root);
       } catch (error) {
         setSubmitting(false);
       }

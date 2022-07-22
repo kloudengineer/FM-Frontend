@@ -115,7 +115,7 @@ export default function ChatSidebar() {
   const handleSearchSelect = (username) => {
     setSearchFocused(false);
     setSearchQuery('');
-    navigate(`${PATH_DASHBOARD.chat.root}/${username}`);
+    navigate(`${PATH_DASHBOARD.root}/${username}`);
   };
 
   const handleSelectContact = (result) => {
@@ -142,7 +142,7 @@ export default function ChatSidebar() {
           {!isCollapse && (
             <MIconButton
               // @ts-ignore
-              to={PATH_DASHBOARD.chat.new}
+              to={PATH_DASHBOARD.root}
               component={RouterLink}
             >
               <Icon icon={editFill} width={20} height={20} />

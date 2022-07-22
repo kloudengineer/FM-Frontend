@@ -34,7 +34,7 @@ const LABEL_ICONS = {
 };
 
 const linkTo = (label) => {
-  const baseUrl = PATH_DASHBOARD.mail.root;
+  const baseUrl = PATH_DASHBOARD.root;
 
   if (label.type === 'system') {
     return `${baseUrl}/${label.id}`;

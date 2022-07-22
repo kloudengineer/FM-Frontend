@@ -57,7 +57,7 @@ export default function ChatWindow() {
         await dispatch(getConversation(conversationKey));
       } catch (error) {
         console.error(error);
-        navigate(PATH_DASHBOARD.chat.new);
+        navigate(PATH_DASHBOARD.root);
       }
     };
     if (conversationKey) {
@@ -109,7 +109,7 @@ export default function ChatWindow() {
           <ChatMessageInput
             conversationId={activeConversationId}
             onSend={handleSendMessage}
-            disabled={pathname === PATH_DASHBOARD.chat.new}
+            disabled={pathname === PATH_DASHBOARD.root}
           />
         </Stack>
 

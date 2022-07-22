@@ -12,7 +12,7 @@ import AuthLayout from '../../layouts/AuthLayout';
 // components
 import Page from '../../components/Page';
 import { MHidden } from '../../components/@material-extend';
-import { RegisterForm } from '../../components/authentication/register';
+import RegisterForm from './components/RegisterForm';
 
 // ----------------------------------------------------------------------
 

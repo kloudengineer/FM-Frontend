@@ -35,7 +35,7 @@ MailDetailsToolbar.propTypes = {
 export default function MailDetailsToolbar({ mail, ...other }) {
   const navigate = useNavigate();
   const { systemLabel, customLabel } = useParams();
-  const baseUrl = PATH_DASHBOARD.mail.root;
+  const baseUrl = PATH_DASHBOARD.root;
 
   const handleBack = () => {
     if (systemLabel) {
