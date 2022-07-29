@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getStaffList, deleteStaff } from '../../../redux/slices/staff';
+import { getRouteList, deleteRoute } from '../../../redux/slices/routes';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -34,15 +34,17 @@ import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import { StaffListHead, StaffListToolbar, StaffMoreMenu } from './components';
+import { RouteListHead, RouteListToolbar, RouteMoreMenu } from './components';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'firstName', label: 'First Name', alignRight: false },
-  { id: 'lastName', label: 'Last Name', alignRight: false },
-  { id: 'phoneNumber', label: 'Phone Number', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'routeID', label: 'ID', alignRight: false },
+  { id: 'customer', label: 'Customer', alignRight: false },
+  { id: 'startTime', label: 'Start Time', alignRight: false },
+  { id: 'endTime', label: 'End Time', alignRight: false },
+  { id: 'driver', label: 'Driver', alignRight: false },
+  { id: 'truck', label: 'Truck', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -73,23 +75,23 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_staff) =>
-      _staff.firstName.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _staff.lastName.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _staff.phoneNumber.indexOf(query.toLowerCase()) !== -1
-      || _staff.email.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _staff.status.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    return filter(array, (_route) =>
+      _route.routeID.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _route.customer.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _route.driver.indexOf(query.toLowerCase()) !== -1
+      || _route.truck.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _route.status.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function StaffList() {
+export default function RouteList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const { staffList, isLoading } = useSelector((state) => state.staff);
+  const { routeList, isLoading } = useSelector((state) => state.route);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -98,8 +100,10 @@ export default function StaffList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    dispatch(getStaffList());
+    dispatch(getRouteList());
   }, [dispatch]);
+
+  console.log("ROUTELIST: ", routeList)
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -109,19 +113,18 @@ export default function StaffList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = staffList.map((n) => n.firstName);
+      const newSelecteds = routeList.map((n) => n.routeID);
       setSelected(newSelecteds);
-      console.log(user)
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, firstName) => {
-    const selectedIndex = selected.indexOf(firstName);
+  const handleClick = (event, routeID) => {
+    const selectedIndex = selected.indexOf(routeID);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, firstName);
+      newSelected = newSelected.concat(selected, routeID);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -145,58 +148,58 @@ export default function StaffList() {
     setFilterName(event.target.value);
   };
 
-  const handleDeleteStaff = (staffId) => {
-    dispatch(deleteStaff(staffId));
-    dispatch(getStaffList());
+  const handleDeleteRoute = (routeID) => {
+    dispatch(deleteRoute(routeID));
+    dispatch(getRouteList());
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - staffList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - routeList.length) : 0;
 
-  const filteredStaff = applySortFilter(staffList, getComparator(order, orderBy), filterName);
+  const filteredRoutes = applySortFilter(routeList, getComparator(order, orderBy), filterName);
 
-  const isStaffNotFound = filteredStaff.length === 0;
+  const isRouteNotFound = filteredRoutes.length === 0;
 
   return (
-    <Page title="Staff Directory">
+    <Page title="Route Directory">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Staff Directory"
+          heading="Route Directory"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Staff', href: PATH_DASHBOARD.dashboard.staff.directory },
+            { name: 'Routes', href: PATH_DASHBOARD.dashboard.routes.directory },
             { name: 'Directory' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.dashboard.staff.new}
+              to={PATH_DASHBOARD.dashboard.routes.new}
               startIcon={<Icon icon={plusFill} />}
             >
-              New Staff
+              New Route
             </Button>
           }
         />
 
         <Card>
-          <StaffListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <RouteListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <StaffListHead
+                <RouteListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={staffList.length}
+                  rowCount={routeList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredStaff.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { _id, firstName, lastName, phoneNumber, email, status } = row;
-                    const isItemSelected = selected.indexOf(firstName) !== -1;
+                  {filteredRoutes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { _id, routeID, customer, startDateTime, endDateTime, driver, truck, status } = row;
+                    const isItemSelected = selected.indexOf(routeID) !== -1;
 
                     return (
                       <TableRow
@@ -208,25 +211,26 @@ export default function StaffList() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, firstName)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, routeID)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            {/* <Avatar alt={name} src={avatarUrl} /> */}
                             <Typography variant="subtitle2" noWrap>
                               <Button
-                                to={`${PATH_DASHBOARD.dashboard.staff.directory}/${_id}`}
+                                to={`${PATH_DASHBOARD.dashboard.routes.directory}/${_id}`}
                                 color="inherit"
                                 component={RouterLink}
                               >
-                                {firstName}
+                                {routeID}
                               </Button>
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{lastName}</TableCell>
-                        <TableCell align="left">{phoneNumber}</TableCell>
-                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{customer}</TableCell>
+                        <TableCell align="left">{startDateTime}</TableCell>
+                        <TableCell align="left">{endDateTime}</TableCell>
+                        <TableCell align="left">{driver}</TableCell>
+                        <TableCell align="left">{truck}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -237,7 +241,7 @@ export default function StaffList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <StaffMoreMenu onDelete={() => handleDeleteStaff(_id)} staffName={firstName} />
+                          <RouteMoreMenu onDelete={() => handleDeleteRoute(_id)} routeID={routeID} />
                         </TableCell>
                       </TableRow>
                     );
@@ -248,7 +252,7 @@ export default function StaffList() {
                     </TableRow>
                   )}
                 </TableBody>
-                {isStaffNotFound && !isLoading && (
+                {isRouteNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -264,7 +268,7 @@ export default function StaffList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={staffList.length}
+            count={routeList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

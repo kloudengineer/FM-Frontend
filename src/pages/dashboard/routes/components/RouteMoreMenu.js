@@ -13,12 +13,12 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-StaffMoreMenu.propTypes = {
+RouteMoreMenu.propTypes = {
   onDelete: PropTypes.func,
-  staffName: PropTypes.string
+  routeID: PropTypes.string
 };
 
-export default function StaffMoreMenu({ onDelete, staffName }) {
+export default function RouteMoreMenu({ onDelete, routeID }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function StaffMoreMenu({ onDelete, staffName }) {
 
         <MenuItem
           component={RouterLink}
-          to={`${PATH_DASHBOARD.dashboard.staff.directory}/${paramCase(staffName)}/edit`}
+          to={`${PATH_DASHBOARD.dashboard.routes.directory}/${paramCase(routeID)}/edit`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

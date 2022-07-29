@@ -140,9 +140,9 @@ const StaffProfile = Loadable(lazy(() => import('../pages/dashboard/staff/StaffP
 const StaffCreate = Loadable(lazy(() => import('../pages/dashboard/staff/StaffCreate')));
 
 // Routes
-const RouteDirectory = Loadable(lazy(() => import('../pages/dashboard/staff/StaffDirectory')));
+const RouteDirectory = Loadable(lazy(() => import('../pages/dashboard/routes/RouteDirectory')));
 const RouteProfile = Loadable(lazy(() => import('../pages/dashboard/staff/StaffProfile')));
-const RouteCreate = Loadable(lazy(() => import('../pages/dashboard/staff/StaffCreate')));
+const RouteCreate = Loadable(lazy(() => import('../pages/dashboard/routes/RouteCreate')));
 
 // Vehicles
 const VehicleDirectory = Loadable(lazy(() => import('../pages/dashboard/staff/StaffDirectory')));

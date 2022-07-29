@@ -3,11 +3,12 @@ import { createContext, useEffect, useReducer, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import axios from '../utils/axios';
 import { firebaseConfig } from '../config';
+import { createCarrier } from '../redux/slices/carriers';
+
 
 // ----------------------------------------------------------------------
-
-const ADMIN_EMAILS = ['demo@minimals.cc'];
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -82,8 +83,8 @@ function AuthProvider({ children }) {
 
   const login = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
 
-  const register = (email, password, firstName, lastName, companyName, registration, address, ein, dot) =>
-    firebase
+  const register = async (email, password, firstName, lastName, phoneNumber, companyName, address, ein, dot) =>
+    await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((res) => {
@@ -94,21 +95,12 @@ function AuthProvider({ children }) {
           .set({
             uid: res.user.uid,
             email,
-            displayName: `${firstName} ${lastName}`
+            displayName: `${firstName} ${lastName}`,
+            companyName: companyName
           });
-      })
-      .then(() => {
-        firebase
-          .firestore()
-          .collection('carriers')
-          .doc()
-          .set({
-            companyName: companyName,
-            registration: registration,
-            address: address,
-            ein: ein,
-            dot: dot
-          })
+        axios.post('/auth/register', {
+          uid: res.user.uid, email, firstName, lastName, phoneNumber, companyName, address, ein, dot
+        })
       })
   
   const logout = async () => {
@@ -120,7 +112,6 @@ function AuthProvider({ children }) {
   };
 
   const auth = { ...state.user };
-  console.log(auth)
 
   return (
     <AuthContext.Provider
@@ -128,19 +119,12 @@ function AuthProvider({ children }) {
         ...state,
         method: 'firebase',
         user: {
-          id: auth.uid,
+          carrierUID: auth.uid,
           email: auth.email,
           photoURL: auth.photoURL || profile?.photoURL,
           displayName: auth.displayName || profile?.displayName,
-          role: ADMIN_EMAILS.includes(auth.email) ? 'admin' : 'user',
-          phoneNumber: auth.phoneNumber || profile?.phoneNumber || '',
-          country: profile?.country || '',
-          address: profile?.address || '',
-          state: profile?.state || '',
-          city: profile?.city || '',
-          zipCode: profile?.zipCode || '',
-          about: profile?.about || '',
-          isPublic: profile?.isPublic || false
+          companyName: auth.companyName || profile?.companyName,
+          role: 'admin',
         },
         login,
         register,

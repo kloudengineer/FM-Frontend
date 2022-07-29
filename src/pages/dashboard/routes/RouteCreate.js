@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getStaffList } from '../../../redux/slices/staff';
+import { getRouteList } from '../../../redux/slices/routes';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -13,31 +13,31 @@ import useSettings from '../../../hooks/useSettings';
 // components
 import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import StaffNewForm from './components/StaffNewForm';
+import RouteNewForm from './components/RouteNewForm';
 
 // ----------------------------------------------------------------------
 
-export default function StaffCreate() {
+export default function RouteCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getStaffList());
+    dispatch(getRouteList());
   }, [dispatch]);
 
   return (
-    <Page title="Staff: Create a new staff">
+    <Page title="Route: Create a new route">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading='Create a new staff'
+          heading='Create a new route'
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Staff', href: PATH_DASHBOARD.dashboard.staff.directory },
-            { name: 'New staff' }
+            { name: 'Route', href: PATH_DASHBOARD.dashboard.routes.directory },
+            { name: 'New route' }
           ]}
         />
 
-        <StaffNewForm />
+        <RouteNewForm />
       </Container>
     </Page>
   );

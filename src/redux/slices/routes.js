@@ -8,12 +8,12 @@ import axios from '../../utils/axios';
 const initialState = {
   isLoading: false,
   error: false,
-  staff: {},
-  staffList: []
+  route: {},
+  routeList: []
 };
 
 const slice = createSlice({
-  name: 'staff',
+  name: 'route',
   initialState,
   reducers: {
     // START LOADING
@@ -27,16 +27,16 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET STAFF
-    getStaffListSuccess(state, action) {
+    // GET ROUTES
+    getRouteListSuccess(state, action) {
       state.isLoading = false;
-      state.staffList = action.payload;
+      state.routeList = action.payload;
     },
 
     // GET PROFILE
     getProfileSuccess(state, action) {
       state.isLoading = false;
-      state.staff = action.payload;
+      state.route = action.payload;
     }
   }
 });
@@ -50,9 +50,9 @@ export function getProfile(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/staff/' + id);
+      const response = await axios.get('/routes/' + id);
       console.log(response.data)
-      dispatch(slice.actions.getProfileSuccess(response.data.staff));
+      dispatch(slice.actions.getProfileSuccess(response.data.route));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -61,13 +61,14 @@ export function getProfile(id) {
 
 // ----------------------------------------------------------------------
 
-export function getStaffList() {
+export function getRouteList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
 
     try {
-      const response = await axios.get('/staff');
-      dispatch(slice.actions.getStaffListSuccess(response.data.staff));
+      const response = await axios.get('/routes');
+      console.log("ROUTES: ", response.data.routes)
+      dispatch(slice.actions.getRouteListSuccess(response.data.routes));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -76,12 +77,12 @@ export function getStaffList() {
 
 // ----------------------------------------------------------------------
 
-export function createStaff(payload) {
+export function createRoute(payload) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/staff', payload);
-      dispatch(slice.actions.createStaffSuccess(response.data.staff));
+      const response = await axios.post('/routes', payload);
+      dispatch(slice.actions.createRouteSuccess(response.data.route));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -90,11 +91,11 @@ export function createStaff(payload) {
 
 // ----------------------------------------------------------------------
 
-export function deleteStaff(staffId) {
+export function deleteRoute(routeId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete('/staff/' + staffId);
+      const response = await axios.delete('/routes/' + routeId);
       console.log(response)
     } catch (error) {
       dispatch(slice.actions.hasError(error));

@@ -1,9 +1,8 @@
 import { Icon } from '@iconify/react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import fileFill from '@iconify/icons-eva/file-fill';
-import bookOpenFill from '@iconify/icons-eva/book-open-fill';
 // routes
-import { PATH_AUTH, PATH_DOCS, PATH_PAGE, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_PAGE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -20,17 +19,17 @@ const menuConfig = [
   },
   {
     title: 'About Us',
-    icon: <Icon icon={bookOpenFill} {...ICON_SIZE} />,
+    icon: <Icon icon={fileFill} {...ICON_SIZE} />,
     path: PATH_PAGE.about
   },
   {
     title: 'Contact Us',
-    icon: <Icon icon={bookOpenFill} {...ICON_SIZE} />,
+    icon: <Icon icon={fileFill} {...ICON_SIZE} />,
     path: PATH_PAGE.contact
   },
   {
     title: 'Pricing',
-    icon: <Icon icon={bookOpenFill} {...ICON_SIZE} />,
+    icon: <Icon icon={fileFill} {...ICON_SIZE} />,
     path: PATH_PAGE.pricing
   }
 ];

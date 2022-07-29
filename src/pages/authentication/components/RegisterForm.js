@@ -27,9 +27,9 @@ export default function RegisterForm() {
     firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    phoneNumber: Yup.string().required('Phone number is required'),
     password: Yup.string().required('Password is required'),
     companyName: Yup.string().required('Company name is required'),
-    registration: Yup.string().required('Registration is required'),
     address: Yup.string().required('Address is required'),
     ein: Yup.string().required('Employee Identification Number (EIN) is required'),
     dot: Yup.string().required('DOT is required'),
@@ -40,9 +40,9 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
+      phoneNumber: '',
       password: '',
       companyName: '',
-      registration: '',
       address: '',
       ein: '',
       dot: ''
@@ -50,7 +50,7 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await register(values.email, values.password, values.firstName, values.lastName, values.companyName, values.registration, values.address, values.ein, values.dot);
+        await register(values.email, values.password, values.firstName, values.lastName, values.phoneNumber, values.companyName, values.address, values.ein, values.dot);
         enqueueSnackbar('Register success', {
           variant: 'success',
           action: (key) => (
@@ -98,15 +98,26 @@ export default function RegisterForm() {
             />
           </Stack>
 
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              fullWidth
+              autoComplete="email"
+              type="email"
+              label="Email address"
+              {...getFieldProps('email')}
+              error={Boolean(touched.email && errors.email)}
+              helperText={touched.email && errors.email}
+            />
+
+            <TextField
+              fullWidth
+              autoComplete="phone number"
+              label="Phone Number"
+              {...getFieldProps('phoneNumber')}
+              error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+              helperText={touched.phoneNumber && errors.phoneNumber}
+            />
+          </Stack>
 
           <TextField
             fullWidth
@@ -136,16 +147,6 @@ export default function RegisterForm() {
               helperText={touched.companyName && errors.companyName}
             />
 
-            <TextField
-              fullWidth
-              label="Registration"
-              {...getFieldProps('registration')}
-              error={Boolean(touched.registration && errors.registration)}
-              helperText={touched.registration && errors.registration}
-            />
-          </Stack>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               fullWidth
               label="Address"

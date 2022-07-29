@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import storage from 'redux-persist/lib/storage';
 // slices
 import staffReducer from './slices/staff';
+import routeReducer from './slices/routes';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +14,8 @@ const rootPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  staff: staffReducer
+  staff: staffReducer,
+  route: routeReducer
 });
 
 export { rootPersistConfig, rootReducer };

@@ -1,25 +1,19 @@
+import { map, filter } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
 // ----------------------------------------------------------------------
 
-function objFromArray(array, key = 'id') {
-  return array.reduce((accumulator, current) => {
-    accumulator[current[key]] = current;
-    return accumulator;
-  }, {});
-}
-
 const initialState = {
   isLoading: false,
   error: false,
-  mails: { byId: {}, allIds: [] },
-  labels: []
+  carrier: [],
+  carrierList: []
 };
 
 const slice = createSlice({
-  name: 'mail',
+  name: 'carrier',
   initialState,
   reducers: {
     // START LOADING
@@ -33,29 +27,16 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET LABELS
-    getLabelsSuccess(state, action) {
+    // GET CARRIER
+    getCarrierListSuccess(state, action) {
       state.isLoading = false;
-      state.labels = action.payload;
+      state.carrierList = action.payload;
     },
 
-    // GET MAILS
-    getMailsSuccess(state, action) {
-      const mails = action.payload;
-
+    // GET PROFILE
+    getProfileSuccess(state, action) {
       state.isLoading = false;
-      state.mails.byId = objFromArray(mails);
-      state.mails.allIds = Object.keys(state.mails.byId);
-    },
-
-    // GET MAIL
-    getMailSuccess(state, action) {
-      const mail = action.payload;
-
-      state.mails.byId[mail.id] = mail;
-      if (!state.mails.allIds.includes(mail.id)) {
-        state.mails.allIds.push(mail.id);
-      }
+      state.profile = action.payload;
     }
   }
 });
@@ -65,12 +46,12 @@ export default slice.reducer;
 
 // ----------------------------------------------------------------------
 
-export function getLabels() {
+export function getProfile() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/mail/labels');
-      dispatch(slice.actions.getLabelsSuccess(response.data.labels));
+      const response = await axios.get('/api/carrier/profile');
+      dispatch(slice.actions.getProfileSuccess(response.data.profile));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -79,12 +60,12 @@ export function getLabels() {
 
 // ----------------------------------------------------------------------
 
-export function getMails(params) {
+export function getCarrierList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/mail/mails', { params });
-      dispatch(slice.actions.getMailsSuccess(response.data.mails));
+      const response = await axios.get('/carrier');
+      dispatch(slice.actions.getStaffListSuccess(response.data.carrier));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -93,14 +74,25 @@ export function getMails(params) {
 
 // ----------------------------------------------------------------------
 
-export function getMail(mailId) {
+export function createCarrier(payload) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/mail/mail', {
-        params: { mailId }
-      });
-      dispatch(slice.actions.getMailSuccess(response.data.mail));
+      const response = await axios.post('/carrier', payload);
+      // dispatch(slice.actions.createStaffSuccess(response.data.staff));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteCarrier(carrierId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete('/carrier/' + carrierId);
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
