@@ -51,7 +51,6 @@ export function getProfile(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/staff/' + id);
-      console.log(response.data)
       dispatch(slice.actions.getProfileSuccess(response.data.staff));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -95,7 +94,6 @@ export function deleteStaff(staffId) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete('/staff/' + staffId);
-      console.log(response)
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

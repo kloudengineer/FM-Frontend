@@ -7,6 +7,7 @@ import { Grid, Stack, Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from '../../../redux/store';
 import { useParams } from 'react-router';
 import { getProfile } from '../../../redux/slices/staff';
+import { findRoutes } from '../../../redux/slices/routes';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -42,12 +43,14 @@ export default function StaffProfile() {
   const { id } = params;
   const dispatch = useDispatch();
   const { staff } = useSelector((state) => state.staff );
+  const { routeList } = useSelector((state) => state.route );
 
   useEffect(() => {
     dispatch(getProfile(id));
+    dispatch(findRoutes({
+      driver: id
+    }));
   }, [dispatch]);
-
-  console.log("STAFF: ", staff)
 
   return (
     <Page title="Staff Profile">
@@ -84,8 +87,9 @@ export default function StaffProfile() {
           </Grid>
 
           <Grid item xs={12} md={12}>
-            <AssignedRoutes staff={staff} />
+            <AssignedRoutes assignedRoutes={routeList} />
           </Grid>
+          
         </Grid>
       </Container>
     </Page>

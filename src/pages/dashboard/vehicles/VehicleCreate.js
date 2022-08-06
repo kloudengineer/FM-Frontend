@@ -5,8 +5,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getRouteList } from '../../../redux/slices/routes';
-import { getStaffList } from '../../../redux/slices/staff';
 import { getVehicleList } from '../../../redux/slices/vehicles';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -15,37 +13,32 @@ import useSettings from '../../../hooks/useSettings';
 // components
 import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import RouteNewForm from './components/RouteNewForm';
+import VehicleNewForm from './components/VehicleNewForm';
 
 // ----------------------------------------------------------------------
 
-export default function RouteCreate() {
+export default function VehicleCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { staffList } = useSelector((state) => state.staff);
   const { vehicleList } = useSelector((state) => state.vehicle);
 
-  console.log(staffList)
-
   useEffect(() => {
-    dispatch(getRouteList());
-    dispatch(getStaffList());
     dispatch(getVehicleList());
   }, [dispatch]);
 
   return (
-    <Page title="Route: Create a new route">
+    <Page title="Route: Create a new vehicle">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading='Create a new route'
+          heading='Create a new vehicle'
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Route', href: PATH_DASHBOARD.dashboard.routes.directory },
-            { name: 'New route' }
+            { name: 'Vehicle', href: PATH_DASHBOARD.dashboard.vehicles.directory },
+            { name: 'New vehicle' }
           ]}
         />
 
-        <RouteNewForm staff={staffList} vehicles={vehicleList} />
+        <VehicleNewForm />
       </Container>
     </Page>
   );

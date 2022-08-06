@@ -1,5 +1,4 @@
-export { default as License } from './License';
-export { default as MedicalCard } from './MedicalCard';
-export { default as AssignedRoutes } from './AssignedRoutes';
-export { default as About } from './About';
-export { default as Cover } from './Cover';
+export { default as RouteAbout } from './RouteAbout';
+export { default as RouteInfo } from './RouteInfo';
+export { default as SimilarRoutes } from './SimilarRoutes';
+export { default as RouteStops } from './RouteStops';

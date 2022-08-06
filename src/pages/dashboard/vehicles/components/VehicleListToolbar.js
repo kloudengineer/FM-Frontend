@@ -31,13 +31,13 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-RouteListToolbar.propTypes = {
+VehicleListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func
 };
 
-export default function RouteListToolbar({ numSelected, filterName, onFilterName }) {
+export default function VehicleListToolbar({ numSelected, filterName, onFilterName }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -58,7 +58,7 @@ export default function RouteListToolbar({ numSelected, filterName, onFilterName
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search routes..."
+          placeholder="Search vehicles..."
           startAdornment={
             <InputAdornment position="start">
               <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />

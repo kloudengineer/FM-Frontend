@@ -28,9 +28,9 @@ export default function StaffNewForm() {
       path: Yup.string(),
       preview: Yup.string()
     }),
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
-    email: Yup.string().required('Email is required').email(),
+    firstName: Yup.string().required('First name is required').min(2).max(30),
+    lastName: Yup.string().required('Last name is required').min(2).max(30),
+    email: Yup.string().required('Email is required').email().min(5).max(30),
     phoneNumber: Yup.string().required('Phone number is required'),
     dateOfBirth: Yup.string().required('Date of Birth is required'),
     ssn: Yup.string().required('Social security number is required'),
@@ -185,14 +185,14 @@ export default function StaffNewForm() {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
-                    label="Firstname"
+                    label="First Name"
                     {...getFieldProps('firstName')}
                     error={Boolean(touched.firstName && errors.firstName)}
                     helperText={touched.firstName && errors.firstName}
                   />
                   <TextField
                     fullWidth
-                    label="Lastname"
+                    label="Last Name"
                     {...getFieldProps('lastName')}
                     error={Boolean(touched.lastName && errors.lastName)}
                     helperText={touched.lastName && errors.lastName}

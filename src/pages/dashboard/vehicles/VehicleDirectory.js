@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getRouteList, deleteRoute } from '../../../redux/slices/routes';
+import { getVehicleList, deleteVehicle } from '../../../redux/slices/vehicles';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -34,18 +34,18 @@ import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import { RouteListHead, RouteListToolbar, RouteMoreMenu } from './components';
+import { VehicleListHead, VehicleListToolbar, VehicleMoreMenu } from './components';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'routeID', label: 'ID', alignRight: false },
-  { id: 'customer', label: 'Customer', alignRight: false },
-  { id: 'startTime', label: 'Start Time', alignRight: false },
-  { id: 'endTime', label: 'End Time', alignRight: false },
-  { id: 'driver', label: 'Driver', alignRight: false },
-  { id: 'truck', label: 'Truck', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'vehicleId', label: 'ID', alignRight: false },
+  { id: 'truckNumber', label: 'Truck Number', alignRight: false },
+  { id: 'plateNumber', label: 'Plate Number', alignRight: false },
+  { id: 'vinNumber', label: 'VIN Number', alignRight: false },
+  { id: 'make', label: 'Make', alignRight: false },
+  { id: 'model', label: 'Model', alignRight: false },
+  { id: 'year', label: 'Year', alignRight: false },
   { id: '' }
 ];
 
@@ -75,23 +75,23 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_route) =>
-      _route.routeID.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _route.customer.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _route.driver.indexOf(query.toLowerCase()) !== -1
-      || _route.truck.toLowerCase().indexOf(query.toLowerCase()) !== -1
-      || _route.status.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    return filter(array, (_vehicle) =>
+    _vehicle.vehicleId.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _vehicle.truckNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _vehicle.plateNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _vehicle.vinNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _vehicle.make.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      || _vehicle.model.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function RouteList() {
+export default function VehicleList() {
   const { themeStretch } = useSettings();
-  const theme = useTheme();
   const { user } = useAuth();
   const dispatch = useDispatch();
-  const { routeList, isLoading } = useSelector((state) => state.route);
+  const { vehicleList, isLoading } = useSelector((state) => state.vehicle);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -100,7 +100,7 @@ export default function RouteList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    dispatch(getRouteList());
+    dispatch(getVehicleList());
   }, [dispatch]);
 
   const handleRequestSort = (event, property) => {
@@ -111,18 +111,18 @@ export default function RouteList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = routeList.map((n) => n.routeID);
+      const newSelecteds = vehicleList.map((n) => n.vehicleId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, routeID) => {
-    const selectedIndex = selected.indexOf(routeID);
+  const handleClick = (event, vehicleId) => {
+    const selectedIndex = selected.indexOf(vehicleId);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, routeID);
+      newSelected = newSelected.concat(selected, vehicleId);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -146,58 +146,58 @@ export default function RouteList() {
     setFilterName(event.target.value);
   };
 
-  const handleDeleteRoute = (routeID) => {
-    dispatch(deleteRoute(routeID));
-    dispatch(getRouteList());
+  const handleDeleteVehicle = (vehicleId) => {
+    dispatch(deleteVehicle(vehicleId));
+    dispatch(getVehicleList());
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - routeList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - vehicleList.length) : 0;
 
-  const filteredRoutes = applySortFilter(routeList, getComparator(order, orderBy), filterName);
+  const filteredVehicles = applySortFilter(vehicleList, getComparator(order, orderBy), filterName);
 
-  const isRouteNotFound = filteredRoutes.length === 0;
+  const isVehicleNotFound = filteredVehicles.length === 0;
 
   return (
-    <Page title="Route Directory">
+    <Page title="Vehicle Directory">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Route Directory"
+          heading="Vehicle Directory"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Routes', href: PATH_DASHBOARD.dashboard.routes.directory },
+            { name: 'Vehicles', href: PATH_DASHBOARD.dashboard.vehicles.directory },
             { name: 'Directory' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.dashboard.routes.new}
+              to={PATH_DASHBOARD.dashboard.vehicles.new}
               startIcon={<Icon icon={plusFill} />}
             >
-              New Route
+              New Vehicle
             </Button>
           }
         />
 
         <Card>
-          <RouteListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <VehicleListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <RouteListHead
+                <VehicleListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={routeList.length}
+                  rowCount={vehicleList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredRoutes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { _id, routeID, customer, startDateTime, endDateTime, driver, truck, status } = row;
-                    const isItemSelected = selected.indexOf(routeID) !== -1;
+                  {filteredVehicles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { _id, vehicleId, truckNumber, plateNumber, vinNumber, make, model, year } = row;
+                    const isItemSelected = selected.indexOf(vehicleId) !== -1;
 
                     return (
                       <TableRow
@@ -209,37 +209,30 @@ export default function RouteList() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, routeID)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, vehicleId)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
                               <Button
-                                to={`${PATH_DASHBOARD.dashboard.routes.directory}/${_id}`}
+                                to={`${PATH_DASHBOARD.dashboard.vehicles.directory}/${_id}`}
                                 color="inherit"
                                 component={RouterLink}
                               >
-                                {routeID}
+                                {vehicleId}
                               </Button>
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{customer}</TableCell>
-                        <TableCell align="left">{startDateTime}</TableCell>
-                        <TableCell align="left">{endDateTime}</TableCell>
-                        <TableCell align="left">{driver}</TableCell>
-                        <TableCell align="left">{truck}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
+                        <TableCell align="left">{truckNumber}</TableCell>
+                        <TableCell align="left">{plateNumber}</TableCell>
+                        <TableCell align="left">{vinNumber}</TableCell>
+                        <TableCell align="left">{make}</TableCell>
+                        <TableCell align="left">{model}</TableCell>
+                        <TableCell align="left">{year}</TableCell>
 
                         <TableCell align="right">
-                          <RouteMoreMenu onDelete={() => handleDeleteRoute(_id)} routeID={routeID} />
+                          <VehicleMoreMenu onDelete={() => handleDeleteVehicle(_id)} vehicleId={vehicleId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -250,7 +243,7 @@ export default function RouteList() {
                     </TableRow>
                   )}
                 </TableBody>
-                {isRouteNotFound && !isLoading && (
+                {isVehicleNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -266,7 +259,7 @@ export default function RouteList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={routeList.length}
+            count={vehicleList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -1,13 +1,11 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik, getIn } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
-// utils
-import { fData } from '../../../../utils/formatNumber';
+import { Box, Card, Grid, Stack, TextField, Typography, MenuItem } from '@mui/material';
 // redux
 import { useDispatch } from '../../../../redux/store';
 import { createRoute } from '../../../../redux/slices/routes';
@@ -16,12 +14,17 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-export default function RouteNewForm() {
+RouteNewForm.propTypes = {
+  staff: PropTypes.array,
+  vehicles: PropTypes.array
+};
+
+export default function RouteNewForm({ staff, vehicles }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const NewStaffSchema = Yup.object().shape({
+  const NewRouteSchema = Yup.object().shape({
     routeID: Yup.string().required('Route ID is required'),
     routeNumber: Yup.string().required('Route Number is required'),
     customer: Yup.string().required('Customer is required'),
@@ -60,7 +63,7 @@ export default function RouteNewForm() {
       driver: '',
       truck: ''
     },
-    validationSchema: NewStaffSchema,
+    validationSchema: NewRouteSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(true);
@@ -153,19 +156,33 @@ export default function RouteNewForm() {
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
+                    select
                     fullWidth
                     label="Driver"
                     {...getFieldProps('driver')}
                     error={Boolean(touched.driver && errors.driver)}
                     helperText={touched.driver && errors.driver}
-                  />
+                  >
+                    {staff.map((option) => (
+                      <MenuItem key={option._id} value={option._id}>
+                        {option.firstName} {option.lastName}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                   <TextField
+                    select
                     fullWidth
                     label="Truck"
                     {...getFieldProps('truck')}
                     error={Boolean(touched.truck && errors.truck)}
                     helperText={touched.truck && errors.truck}
-                  />
+                  >
+                    {vehicles.map((option) => (
+                      <MenuItem key={option._id} value={option._id}>
+                        {option.vehicleId}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Stack>
               </Stack>
             </Card>

@@ -8,12 +8,12 @@ import axios from '../../utils/axios';
 const initialState = {
   isLoading: false,
   error: false,
-  route: {},
-  routeList: []
+  vehicle: {},
+  vehicleList: []
 };
 
 const slice = createSlice({
-  name: 'route',
+  name: 'vehicle',
   initialState,
   reducers: {
     // START LOADING
@@ -27,16 +27,16 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET ROUTES
-    getRouteListSuccess(state, action) {
+    // GET VEHICLES
+    getVehicleListSuccess(state, action) {
       state.isLoading = false;
-      state.routeList = action.payload;
+      state.vehicleList = action.payload;
     },
 
     // GET PROFILE
     getProfileSuccess(state, action) {
       state.isLoading = false;
-      state.route = action.payload;
+      state.vehicle = action.payload;
     }
   }
 });
@@ -50,8 +50,8 @@ export function getProfile(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/routes/' + id);
-      dispatch(slice.actions.getProfileSuccess(response.data.route));
+      const response = await axios.get('/vehicles/' + id);
+      dispatch(slice.actions.getProfileSuccess(response.data.vehicle));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -60,13 +60,14 @@ export function getProfile(id) {
 
 // ----------------------------------------------------------------------
 
-export function getRouteList() {
+export function getVehicleList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
 
     try {
-      const response = await axios.get('/routes');
-      dispatch(slice.actions.getRouteListSuccess(response.data.routes));
+      const response = await axios.get('/vehicles');
+      console.log(response.data)
+      dispatch(slice.actions.getVehicleListSuccess(response.data.vehicles));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -75,12 +76,12 @@ export function getRouteList() {
 
 // ----------------------------------------------------------------------
 
-export function findRoutes(filter) {
+export function findVehicles(filter) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/find-routes', filter);
-      dispatch(slice.actions.getRouteListSuccess(response.data.routes));
+      const response = await axios.post('/find-vehicles', filter);
+      dispatch(slice.actions.getRouteListSuccess(response.data.vehicles));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -89,12 +90,12 @@ export function findRoutes(filter) {
 
 // ----------------------------------------------------------------------
 
-export function createRoute(payload) {
+export function createVehicle(payload) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post('/routes', payload);
-      dispatch(slice.actions.createRouteSuccess(response.data.route));
+      const response = await axios.post('/vehicles', payload);
+      dispatch(slice.actions.createVehicleSuccess(response.data.vehicle));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -103,11 +104,11 @@ export function createRoute(payload) {
 
 // ----------------------------------------------------------------------
 
-export function deleteRoute(routeId) {
+export function deleteVehicle(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete('/routes/' + routeId);
+      const response = await axios.delete('/vehicles/' + id);
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

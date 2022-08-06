@@ -1,36 +1,48 @@
 import PropTypes from 'prop-types';
+import { useRef, useState } from 'react';
+import { sentenceCase } from 'change-case';
 import { Icon } from '@iconify/react';
 import { Link as RouterLink } from 'react-router-dom';
+import shareFill from '@iconify/icons-eva/share-fill';
+import printerFill from '@iconify/icons-eva/printer-fill';
+import downloadFill from '@iconify/icons-eva/download-fill';
+import trash2Outline from '@iconify/icons-eva/trash-2-outline';
+import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
+import { useSelector } from 'react-redux';
 // material
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
+  Menu,
   Table,
   Button,
   Divider,
+  MenuItem,
   TableRow,
   TableBody,
   TableCell,
   TableHead,
   CardHeader,
+  Typography,
   TableContainer
 } from '@mui/material';
 
 //
 import Label from '../../../../../components/Label';
 import Scrollbar from '../../../../../components/Scrollbar';
+import { MIconButton } from '../../../../../components/@material-extend';
 
 // ----------------------------------------------------------------------
 
-AssignedRoutes.propTypes = {
-  assignedRoutes: PropTypes.array
+AssignedRoutesCard.propTypes = {
+  vehicle: PropTypes.object
 };
 
+export default function AssignedRoutesCard({ assignedRoutes }) {
+  const theme = useTheme();
 
-
-export default function AssignedRoutes({ assignedRoutes }) {
   const handleDateFormat = (date) => {
     const dateValue = new Date(date).toLocaleString('en-US', {
       year: 'numeric',
@@ -52,23 +64,23 @@ export default function AssignedRoutes({ assignedRoutes }) {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ minWidth: 120 }}>Route ID</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Route Number</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Client</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>Start Time</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>End Time</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Customer</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Driver</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>Start</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>End</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Status</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {assignedRoutes.map((rt) => (
-                  <TableRow key={rt.routeID}>
-                    <TableCell> {rt.routeID} </TableCell>
-                    <TableCell> {rt.routeNumber} </TableCell>
+                  <TableRow key={rt.Id}>
+                    <TableCell>{rt.routeID}</TableCell>
                     <TableCell sx={{ textTransform: 'capitalize' }}>{rt.customer}</TableCell>
+                    <TableCell>{rt.driver}</TableCell>
                     <TableCell>{handleDateFormat(rt.startDateTime)}</TableCell>
                     <TableCell>{handleDateFormat(rt.endDateTime)}</TableCell>
-                    <TableCell><Label>{rt.status}</Label> </TableCell>
+                    <TableCell>{sentenceCase(rt.status)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
