@@ -89,6 +89,19 @@ export function createStaff(payload) {
 
 // ----------------------------------------------------------------------
 
+export function updateStaff(staffId, payload) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/staff/' + staffId, payload);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function deleteStaff(staffId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

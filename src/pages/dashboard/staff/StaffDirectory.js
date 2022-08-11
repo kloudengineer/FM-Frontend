@@ -237,7 +237,7 @@ export default function StaffList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <StaffMoreMenu onDelete={() => handleDeleteStaff(_id)} staffName={firstName} />
+                          <StaffMoreMenu onDelete={() => handleDeleteStaff(_id)} staffId={_id} />
                         </TableCell>
                       </TableRow>
                     );

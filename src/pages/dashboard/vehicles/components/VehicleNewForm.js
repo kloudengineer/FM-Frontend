@@ -20,20 +20,20 @@ export default function VehicleNewForm() {
   const dispatch = useDispatch();
 
   const NewVehicleSchema = Yup.object().shape({
-    vehicleId: Yup.string().required('Vehicle ID is required'),
-    vehicleType: Yup.string().required('Vehicle type is required'),
-    vinNumber: Yup.string().required('VIN Number is required'),
-    truckNumber: Yup.string().required('Truck Number is required'),
-    plateNumber: Yup.string().required('Plate Number is required'),
-    make: Yup.string().required('Make is required'),
-    model: Yup.string().required('Model is required'),
-    year: Yup.string().required('Year is required'),
-    latestInspectionDate: Yup.string().required('Latest inspection date is required'),
-    latestMaintenanceDate: Yup.string().required('Latest maintenance date is required'),
-    latestAcquiryDate: Yup.string().required('Latest acquiry date is required'),
-    latestReturnDate: Yup.string().required('Latest return date is required'),
-    buyOrRentalDate: Yup.string().required('Buy or rental date is required'),
-    soldOrReturnDate: Yup.string().required('Sold or return date is required')
+    vehicleId: Yup.string(),
+    vehicleType: Yup.string(),
+    vinNumber: Yup.string(),
+    truckNumber: Yup.string(),
+    plateNumber: Yup.string(),
+    make: Yup.string(),
+    model: Yup.string(),
+    year: Yup.string(),
+    latestInspectionDate: Yup.string(),
+    latestMaintenanceDate: Yup.string(),
+    latestAcquiryDate: Yup.string(),
+    latestReturnDate: Yup.string(),
+    buyOrRentalDate: Yup.string(),
+    soldOrReturnDate: Yup.string()
   });
 
   const formik = useFormik({

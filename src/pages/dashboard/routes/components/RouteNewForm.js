@@ -2,10 +2,11 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { Form, FormikProvider, useFormik, getIn } from 'formik';
+import { Form, FieldArray, FormikProvider, useFormik, getIn } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, TextField, Typography, MenuItem } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, IconButton, Box, Card, Grid, Stack, TextField, Typography, MenuItem } from '@mui/material';
 // redux
 import { useDispatch } from '../../../../redux/store';
 import { createRoute } from '../../../../redux/slices/routes';
@@ -15,28 +16,30 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 // ----------------------------------------------------------------------
 
 RouteNewForm.propTypes = {
+  isEdit: PropTypes.bool,
+  route: PropTypes.object,
   staff: PropTypes.array,
   vehicles: PropTypes.array
 };
 
-export default function RouteNewForm({ staff, vehicles }) {
+export default function RouteNewForm({ isEdit, route, staff, vehicles }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
   const NewRouteSchema = Yup.object().shape({
-    routeID: Yup.string().required('Route ID is required'),
-    routeNumber: Yup.string().required('Route Number is required'),
-    customer: Yup.string().required('Customer is required'),
-    startDateTime: Yup.string().required('Start time is required'),
-    endDateTime: Yup.string().required('End time is required'),
-    origin: Yup.string().required('Origin address is required'),
-    destination: Yup.string().required('Destinaton address is required'),
-    distance: Yup.number().required('Distance is required'),
+    routeID: Yup.string(),
+    routeNumber: Yup.string(),
+    customer: Yup.string(),
+    startDateTime: Yup.string(),
+    endDateTime: Yup.string(),
+    origin: Yup.string(),
+    destination: Yup.string(),
+    distance: Yup.number(),
     stopAddresses: Yup.array().of(
       Yup.object().shape({
-        address: Yup.string().required('Stop address is required'),
-        arrivalDateTime: Yup.string().required('Arrival time is required')
+        address: Yup.string(),
+        arrivalDateTime: Yup.string()
       })
     ),
     driver: Yup.string().required('Driver is required'),
@@ -202,28 +205,61 @@ export default function RouteNewForm({ staff, vehicles }) {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Address"
-                    {...getFieldProps(`stopAddresses.0.address`)}
-                    error={Boolean(getIn(touched, `stopAddresses.0.address`) && getIn(errors, `stopAddresses.0.address`))}
-                    helperText={getIn(touched, `stopAddresses.0.address`) && getIn(errors, `stopAddresses.0.address`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Arrival Time"
-                    {...getFieldProps(`stopAddresses.0.arrivalDateTime`)}
-                    error={Boolean(getIn(touched, `stopAddresses.0.arrivalDateTime`) && getIn(errors, `stopAddresses.0.arrivalDateTime`))}
-                    helperText={getIn(touched, `stopAddresses.0.arrivalDateTime`) && getIn(errors, `stopAddresses.0.arrivalDateTime`)}
-                  />
-                </Stack>
-              </Stack>
-            </Card>
-          </Grid>
+          <FieldArray
+              name="stopAddresses"
+              render={(stops) => (
+                <>
+                    {stops.form.values.stopAddresses.map((res, index) => (
+                      <Grid key={index} item xs={12} md={12}>
+                        <Card sx={{ p: 3 }}>
+                          <Stack spacing={3}>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Address"
+                                {...getFieldProps(`stopAddresses.${index}.address`)}
+                                error={Boolean(getIn(touched, `stopAddresses.${index}.address`) && getIn(errors, `stopAddresses.${index}.address`))}
+                                helperText={getIn(touched, `stopAddresses.${index}.address`) && getIn(errors, `stopAddresses.${index}.address`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Arrival Time"
+                                {...getFieldProps(`stopAddresses.${index}.arrivalDateTime`)}
+                                error={Boolean(getIn(touched, `stopAddresses.${index}.arrivalDateTime`) && getIn(errors, `stopAddresses.${index}.arrivalDateTime`))}
+                                helperText={getIn(touched, `stopAddresses.${index}.arrivalDateTime`) && getIn(errors, `stopAddresses.${index}.arrivalDateTime`)}
+                              />
+                            </Stack>
+
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              {
+                                stops.form.values.stopAddresses.length !== 1 && (
+                                  <IconButton onClick={() => stops.remove(index)}>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                )
+                              }
+                        
+                              <Button
+                                fullWidth
+                                onClick={() => {
+                                  stops.push({
+                                    address: '',
+                                    arrivalDateTime: ''
+                                  })
+                                }
+                                 
+                                }
+                              >
+                                Add stop
+                              </Button>
+                            </Stack>
+                          </Stack>
+                        </Card>
+                      </Grid>     
+                    ))}
+                </>
+              )}
+            />
 
           <Grid item xs={12} md={12}>
               <Stack spacing={3}>

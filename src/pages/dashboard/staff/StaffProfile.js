@@ -56,7 +56,7 @@ export default function StaffProfile() {
     <Page title="Staff Profile">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Profile"
+          heading={`${staff.firstName} ${staff.lastName}`}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.dashboard },
             { name: 'Staff Directory', href: PATH_DASHBOARD.dashboard.staff.directory },

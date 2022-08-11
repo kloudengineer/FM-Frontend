@@ -67,6 +67,10 @@ function AuthProvider({ children }) {
               console.error(error);
             });
 
+          user.getIdToken().then((token) => axios.defaults.headers.common['Authorization'] = "Bearer " + token)
+          
+          
+
           dispatch({
             type: 'INITIALISE',
             payload: { isAuthenticated: true, user }

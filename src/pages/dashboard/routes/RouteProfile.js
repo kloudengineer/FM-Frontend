@@ -46,7 +46,7 @@ export default function StaffProfile() {
           heading="Profile"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.dashboard },
-            { name: 'Route Directory', href: PATH_DASHBOARD.dashboard.staff.directory },
+            { name: 'Route Directory', href: PATH_DASHBOARD.dashboard.routes.directory },
             { name: `${route.routeID}` }
           ]}
         />

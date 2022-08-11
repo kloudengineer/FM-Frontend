@@ -1,16 +1,18 @@
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { Form, FormikProvider, useFormik, getIn } from 'formik';
+import { Form, FieldArray, FormikProvider, useFormik, getIn } from 'formik';
 // material
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, TextField, Typography, FormHelperText } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, IconButton, Card, CardHeader, Grid, Stack, TextField, Typography, FormLabel, FormHelperText } from '@mui/material';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { createStaff } from '../../../../redux/slices/staff';
+import { createStaff, updateStaff } from '../../../../redux/slices/staff';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 //
@@ -18,53 +20,58 @@ import { UploadAvatar } from '../../../../components/upload';
 
 // ----------------------------------------------------------------------
 
-export default function StaffNewForm() {
+StaffNewForm.propTypes = {
+  isEdit: PropTypes.bool,
+  staff: PropTypes.object
+};
+
+export default function StaffNewForm({ isEdit, staff }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const NewStaffSchema = Yup.object().shape({
+  const StaffSchema = Yup.object().shape({
     avatarUrl: Yup.object().shape({
       path: Yup.string(),
       preview: Yup.string()
     }),
-    firstName: Yup.string().required('First name is required').min(2).max(30),
-    lastName: Yup.string().required('Last name is required').min(2).max(30),
-    email: Yup.string().required('Email is required').email().min(5).max(30),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    dateOfBirth: Yup.string().required('Date of Birth is required'),
-    ssn: Yup.string().required('Social security number is required'),
+    firstName: Yup.string().min(2).max(30),
+    lastName: Yup.string().min(2).max(30),
+    email: Yup.string().email().min(5).max(30),
+    phoneNumber: Yup.string(),
+    dateOfBirth: Yup.string(),
+    ssn: Yup.string(),
     address: Yup.array().of(
       Yup.object().shape({
-        streetAddress1: Yup.string().required('Street address is required'),
+        streetAddress1: Yup.string(),
         streetAddress2: Yup.string(),
-        city: Yup.string().required('City is required'),
-        state: Yup.string().required('State is required'),
-        zipCode: Yup.string().required('ZIP code is required'),
-        moveInDate: Yup.string().required("Move-in date is required"),
-        moveOutDate: Yup.string().required("Move-out date is required")
+        city: Yup.string(),
+        state: Yup.string(),
+        zipCode: Yup.string(),
+        moveInDate: Yup.string(),
+        moveOutDate: Yup.string()
       })
     ),
     license: Yup.object().shape({
-      number: Yup.string().required('Driver\' license number is required'),
-      state: Yup.string().required('State is required'),
-      issueDate: Yup.string().required('Issue Date is required'),
-      expiryDate: Yup.string().required('Date of expiration required'),
+      number: Yup.string(),
+      state: Yup.string(),
+      issueDate: Yup.string(),
+      expiryDate: Yup.string(),
     }),
     medicalCard: Yup.object().shape({
-      issueDate: Yup.string().required('Issue Date is required'),
-      expiryDate: Yup.string().required('Date of expiration required'),
+      issueDate: Yup.string(),
+      expiryDate: Yup.string(),
     }),
     workHistory: Yup.array().of(
       Yup.object().shape({
-        companyName: Yup.string().required('Company name is required'),
-        companyAddress: Yup.string().required('Address is required'),
-        position: Yup.string().required('Position is required'),
-        startDate: Yup.string().required('Start date is required'),
-        endDate: Yup.string().required('End date is required'),
-        referenceName: Yup.string().required('Reference name is required'),
-        referencePhone: Yup.string().required('Reference phone is required'),
-        referenceEmail: Yup.string().required('Reference email is required')
+        companyName: Yup.string(),
+        companyAddress: Yup.string(),
+        position: Yup.string(),
+        startDate: Yup.string(),
+        endDate: Yup.string(),
+        referenceName: Yup.string(),
+        referencePhone: Yup.string(),
+        referenceEmail: Yup.string()
       })
     )
   });
@@ -73,16 +80,16 @@ export default function StaffNewForm() {
     enableReinitialize: true,
     initialValues: {
       avatarUrl: {
-        path: '',
-        preview: ''
+        path: staff?.avatarUrl?.path || '',
+        preview: staff?.avatarUrl?.preview || ''
       },
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      dateOfBirth: '',
-      ssn: '',
-      address: [
+      firstName: staff?.firstName || '',
+      lastName: staff?.lastName || '',
+      email: staff?.email || '',
+      phoneNumber: staff?.phoneNumber || '',
+      dateOfBirth: staff?.dateOfBirth || '',
+      ssn: staff?.ssn || '',
+      address: staff?.address || [
         {
           streetAddress1: '',
           streetAddress2: '',
@@ -94,16 +101,16 @@ export default function StaffNewForm() {
         }
       ],
       license: {
-        number: '',
-        state: '',
-        issueDate: '',
-        expiryDate: ''
+        number: staff?.license?.number || '',
+        state: staff?.license?.state || '',
+        issueDate: staff?.license?.issueDate || '',
+        expiryDate: staff?.license?.expiryDate || ''
       },
       medicalCard: {
-        issueDate: '',
-        expiryDate: ''
+        issueDate: staff?.medicalCard?.issueDate || '',
+        expiryDate: staff?.medicalCard?.expiryDate || ''
       },
-      workHistory: [
+      workHistory: staff?.workHistory || [
         {
           companyName: '',
           companyAddress: '',
@@ -116,11 +123,11 @@ export default function StaffNewForm() {
         }
       ]
     },
-    validationSchema: NewStaffSchema,
+    validationSchema: StaffSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(true);
-        await dispatch(createStaff(values));
+        await dispatch(isEdit ? updateStaff(staff._id, values) : createStaff(values));
         resetForm();
         setSubmitting(false);
         enqueueSnackbar('Create success', { variant: 'success' });
@@ -154,7 +161,7 @@ export default function StaffNewForm() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ py: 4, px: 3 }}>
-              <Box sx={{ mb: 5 }}>
+              {/* <Box sx={{ mb: 5 }}>
                 <UploadAvatar
                   accept="image/*"
                   file={values.avatarUrl}
@@ -180,7 +187,7 @@ export default function StaffNewForm() {
                 <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
                   {touched.avatarUrl && errors.avatarUrl}
                 </FormHelperText>
-              </Box>
+              </Box> */}
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
@@ -250,70 +257,104 @@ export default function StaffNewForm() {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Street Address 1"
-                    {...getFieldProps(`address.0.streetAddress1`)}
-                    error={Boolean(getIn(touched, `address.0.streetAddress1`) && getIn(errors, `address.0.streetAddress1`))}
-                    helperText={getIn(touched, `address.0.streetAddress1`) && getIn(errors, `address.0.streetAddress1`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Street Address 2"
-                    {...getFieldProps(`address.0.streetAddress2`)}
-                    error={Boolean(getIn(touched, `address.0.streetAddress2`) && getIn(errors, `address.0.streetAddress2`))}
-                    helperText={getIn(touched, `address.0.streetAddress2`) && getIn(errors, `address.0.streetAddress2`)}
-                  />
-                </Stack>
+          <FieldArray
+              name="address"
+              render={(addresses) => (
+                <>
+                    {addresses.form.values.address.map((res, index) => (
+                      <Grid key={index} item xs={12} md={12}>
+                        <Card sx={{ p: 3 }}>
+                          <Stack spacing={3}>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Street Address 1"
+                                {...getFieldProps(`address.${index}.streetAddress1`)}
+                                error={Boolean(getIn(touched, `address.${index}.streetAddress1`) && getIn(errors, `address.${index}.streetAddress1`))}
+                                helperText={getIn(touched, `address.${index}.streetAddress1`) && getIn(errors, `address.${index}.streetAddress1`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Street Address 2"
+                                {...getFieldProps(`address.${index}.streetAddress2`)}
+                                error={Boolean(getIn(touched, `address.${index}.streetAddress2`) && getIn(errors, `address.${index}.streetAddress2`))}
+                                helperText={getIn(touched, `address.${index}.streetAddress2`) && getIn(errors, `address.${index}.streetAddress2`)}
+                              />
+                            </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="City"
-                    {...getFieldProps(`address.0.city`)}
-                    error={Boolean(getIn(touched, `address.0.city`) && getIn(errors, `address.0.city`))}
-                    helperText={getIn(touched, `address.0.city`) && getIn(errors, `address.0.city`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="State"
-                    {...getFieldProps(`address.0.state`)}
-                    error={Boolean(getIn(touched, `address.0.state`) && getIn(errors, `address.0.state`))}
-                    helperText={getIn(touched, `address.0.state`) && getIn(errors, `address.0.state`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Zip Code"
-                    {...getFieldProps(`address.0.zipCode`)}
-                    error={Boolean(getIn(touched, `address.0.zipCode`) && getIn(errors, `address.0.zipCode`))}
-                    helperText={getIn(touched, `address.0.zipCode`) && getIn(errors, `address.0.zipCode`)}
-                  />
-                </Stack>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="City"
+                                {...getFieldProps(`address.${index}.city`)}
+                                error={Boolean(getIn(touched, `address.${index}.city`) && getIn(errors, `address.${index}.city`))}
+                                helperText={getIn(touched, `address.${index}.city`) && getIn(errors, `address.${index}.city`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="State"
+                                {...getFieldProps(`address.${index}.state`)}
+                                error={Boolean(getIn(touched, `address.${index}.state`) && getIn(errors, `address.${index}.state`))}
+                                helperText={getIn(touched, `address.${index}.state`) && getIn(errors, `address.${index}.state`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Zip Code"
+                                {...getFieldProps(`address.${index}.zipCode`)}
+                                error={Boolean(getIn(touched, `address.${index}.zipCode`) && getIn(errors, `address.${index}.zipCode`))}
+                                helperText={getIn(touched, `address.${index}.zipCode`) && getIn(errors, `address.${index}.zipCode`)}
+                              />
+                            </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Move-in Date"
-                    {...getFieldProps(`address.0.moveInDate`)}
-                    error={Boolean(getIn(touched, `address.0.moveInDate`) && getIn(errors, `address.0.moveInDate`))}
-                    helperText={getIn(touched, `address.0.moveInDate`) && getIn(errors, `address.0.moveInDate`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Move-out Date"
-                    {...getFieldProps(`address.0.moveOutDate`)}
-                    error={Boolean(getIn(touched, `address.0.moveOutDate`) && getIn(errors, `address.0.moveOutDate`))}
-                    helperText={getIn(touched, `address.0.moveOutDate`) && getIn(errors, `address.0.moveOutDate`)}
-                  />
-                </Stack>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Move-in Date"
+                                {...getFieldProps(`address.${index}.moveInDate`)}
+                                error={Boolean(getIn(touched, `address.${index}.moveInDate`) && getIn(errors, `address.${index}.moveInDate`))}
+                                helperText={getIn(touched, `address.${index}.moveInDate`) && getIn(errors, `address.${index}.moveInDate`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Move-out Date"
+                                {...getFieldProps(`address.${index}.moveOutDate`)}
+                                error={Boolean(getIn(touched, `address.${index}.moveOutDate`) && getIn(errors, `address.${index}.moveOutDate`))}
+                                helperText={getIn(touched, `address.${index}.moveOutDate`) && getIn(errors, `address.${index}.moveOutDate`)}
+                              />
+                            </Stack>
 
-              </Stack>
-            </Card>
-          </Grid>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              {
+                                addresses.form.values.address.length !== 1 && (
+                                  <IconButton onClick={() => addresses.remove(index)}>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                )
+                              }
+                        
+                              <Button
+                                fullWidth
+                                onClick={() =>
+                                  addresses.push({
+                                    streetAddress1: staff?.streetAddress1 || '',
+                                    streetAddress2: staff?.streetAddress2 || '',
+                                    city: staff?.city || '',
+                                    state: staff?.state || '',
+                                    zip: staff?.zip || ''
+                                  })
+                                }
+                              >
+                                Add another address
+                              </Button>
+                            </Stack>
+                          </Stack>
+                        </Card>
+                      </Grid>
+                      
+                    ))}
+                </>
+              )}
+            />
 
           <Grid item xs={12} md={12}>
             <Typography
@@ -420,77 +461,117 @@ export default function StaffNewForm() {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Company"
-                    {...getFieldProps(`workHistory.0.companyName`)}
-                    error={Boolean(getIn(touched, `workHistory.0.companyName`) && getIn(errors, `workHistory.0.companyName`))}
-                    helperText={getIn(touched, `workHistory.0.companyName`) && getIn(errors, `workHistory.0.companyName`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Address"
-                    {...getFieldProps(`workHistory.0.companyAddress`)}
-                    error={Boolean(getIn(touched, `workHistory.0.companyAddress`) && getIn(errors, `workHistory.0.companyAddress`))}
-                    helperText={getIn(touched, `workHistory.0.companyAddress`) && getIn(errors, `workHistory.0.companyAddress`)}
-                  />
-                </Stack>
+          <FieldArray
+              name="workHistory"
+              render={(work) => (
+                <>
+                    {work.form.values.workHistory.map((res, index) => (
+                      <Grid key={index} item xs={12} md={12}>
+                        <Card sx={{ p: 3 }}>
+                          <Stack spacing={3}>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Company"
+                                {...getFieldProps(`workHistory.${index}.companyName`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.companyName`) && getIn(errors, `workHistory.${index}.companyName`))}
+                                helperText={getIn(touched, `workHistory.${index}.companyName`) && getIn(errors, `workHistory.${index}.companyName`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Address"
+                                {...getFieldProps(`workHistory.${index}.companyAddress`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.companyAddress`) && getIn(errors, `workHistory.${index}.companyAddress`))}
+                                helperText={getIn(touched, `workHistory.${index}.companyAddress`) && getIn(errors, `workHistory.${index}.companyAddress`)}
+                              />
+                            </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Position"
-                    {...getFieldProps(`workHistory.0.position`)}
-                    error={Boolean(getIn(touched, `workHistory.0.position`) && getIn(errors, `workHistory.0.position`))}
-                    helperText={getIn(touched, `workHistory.0.position`) && getIn(errors, `workHistory.0.position`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Start Date"
-                    {...getFieldProps(`workHistory.0.startDate`)}
-                    error={Boolean(getIn(touched, `workHistory.0.startDate`) && getIn(errors, `workHistory.0.startDate`))}
-                    helperText={getIn(touched, `workHistory.0.startDate`) && getIn(errors, `workHistory.0.startDate`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="End Date"
-                    {...getFieldProps(`workHistory.0.endDate`)}
-                    error={Boolean(getIn(touched, `workHistory.0.endDate`) && getIn(errors, `workHistory.0.endDate`))}
-                    helperText={getIn(touched, `workHistory.0.endDate`) && getIn(errors, `workHistory.0.endDate`)}
-                  />
-                </Stack>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Position"
+                                {...getFieldProps(`workHistory.${index}.position`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.position`) && getIn(errors, `workHistory.${index}.position`))}
+                                helperText={getIn(touched, `workHistory.${index}.position`) && getIn(errors, `workHistory.${index}.position`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Start Date"
+                                {...getFieldProps(`workHistory.${index}.startDate`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.startDate`) && getIn(errors, `workHistory.${index}.startDate`))}
+                                helperText={getIn(touched, `workHistory.${index}.startDate`) && getIn(errors, `workHistory.${index}.startDate`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="End Date"
+                                {...getFieldProps(`workHistory.${index}.endDate`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.endDate`) && getIn(errors, `workHistory.${index}.endDate`))}
+                                helperText={getIn(touched, `workHistory.${index}.endDate`) && getIn(errors, `workHistory.${index}.endDate`)}
+                              />
+                            </Stack>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Reference's Name"
-                    {...getFieldProps(`workHistory.0.referenceName`)}
-                    error={Boolean(getIn(touched, `workHistory.0.referenceName`) && getIn(errors, `workHistory.0.referenceName`))}
-                    helperText={getIn(touched, `workHistory.0.referenceName`) && getIn(errors, `workHistory.0.referenceName`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Reference's Phone"
-                    {...getFieldProps(`workHistory.0.referencePhone`)}
-                    error={Boolean(getIn(touched, `workHistory.0.referencePhone`) && getIn(errors, `workHistory.0.referencePhone`))}
-                    helperText={getIn(touched, `workHistory.0.referencePhone`) && getIn(errors, `workHistory.0.referencePhone`)}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Reference's Email"
-                    {...getFieldProps(`workHistory.0.referenceEmail`)}
-                    error={Boolean(getIn(touched, `workHistory.0.referenceEmail`) && getIn(errors, `workHistory.0.referenceEmail`))}
-                    helperText={getIn(touched, `workHistory.0.referenceEmail`) && getIn(errors, `workHistory.0.referenceEmail`)}
-                  />
-                </Stack>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              <TextField
+                                fullWidth
+                                label="Reference's Name"
+                                {...getFieldProps(`workHistory.${index}.referenceName`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.referenceName`) && getIn(errors, `workHistory.${index}.referenceName`))}
+                                helperText={getIn(touched, `workHistory.${index}.referenceName`) && getIn(errors, `workHistory.${index}.referenceName`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Reference's Phone"
+                                {...getFieldProps(`workHistory.${index}.referencePhone`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.referencePhone`) && getIn(errors, `workHistory.${index}.referencePhone`))}
+                                helperText={getIn(touched, `workHistory.${index}.referencePhone`) && getIn(errors, `workHistory.${index}.referencePhone`)}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Reference's Email"
+                                {...getFieldProps(`workHistory.${index}.referenceEmail`)}
+                                error={Boolean(getIn(touched, `workHistory.${index}.referenceEmail`) && getIn(errors, `workHistory.${index}.referenceEmail`))}
+                                helperText={getIn(touched, `workHistory.${index}.referenceEmail`) && getIn(errors, `workHistory.${index}.referenceEmail`)}
+                              />
+                            </Stack>
 
-              </Stack>
-            </Card>
-          </Grid>
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                              {
+                                work.form.values.workHistory.length !== 1 && (
+                                  <IconButton onClick={() => work.remove(index)}>
+                                    <DeleteIcon />
+                                  </IconButton>
+                                )
+                              }
+                        
+                              <Button
+                                fullWidth
+                                onClick={() => {
+                                  work.push({
+                                    companyName: staff?.companyName || '',
+                                    companyAddress: staff?.companyAddress || '',
+                                    position: staff?.position || '',
+                                    startDate: staff?.startDate || '',
+                                    endDate: staff?.endDate || '',
+                                    referenceName: staff?.referenceName || '',
+                                    referencePhone: staff?.referencePhone || '',
+                                    referenceEmail: staff?.referenceEmail || ''
+                                  })
+                                }
+                                 
+                                }
+                              >
+                                Add previous work
+                              </Button>
+                            </Stack>
+
+                          </Stack>
+                        </Card>
+                      </Grid>
+                      
+                    ))}
+                </>
+              )}
+            />
 
           <Grid item xs={12} md={12}>
               <Stack spacing={3}>

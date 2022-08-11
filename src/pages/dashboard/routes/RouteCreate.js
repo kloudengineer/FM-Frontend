@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getRouteList } from '../../../redux/slices/routes';
+import { getProfile } from '../../../redux/slices/routes';
 import { getStaffList } from '../../../redux/slices/staff';
 import { getVehicleList } from '../../../redux/slices/vehicles';
 // routes
@@ -22,30 +22,36 @@ import RouteNewForm from './components/RouteNewForm';
 export default function RouteCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
+  const Params = useParams();
+  const { pathname } = useLocation();
+  const { route } = useSelector((state) => state.route );
   const { staffList } = useSelector((state) => state.staff);
   const { vehicleList } = useSelector((state) => state.vehicle);
 
-  console.log(staffList)
+  const { id } = Params;
+  const isEdit = pathname.includes('edit');
 
   useEffect(() => {
-    dispatch(getRouteList());
+    if(isEdit){ 
+      dispatch(getProfile(id));
+    }
     dispatch(getStaffList());
     dispatch(getVehicleList());
   }, [dispatch]);
 
   return (
-    <Page title="Route: Create a new route">
+    <Page title={isEdit ? `Route: Edit route` : `Route: Create route`}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading='Create a new route'
+          heading={isEdit ? `Edit route` : `Create a new route`}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Route', href: PATH_DASHBOARD.dashboard.routes.directory },
-            { name: 'New route' }
+            { name: isEdit ? `Edit route` : `Create route` }
           ]}
         />
 
-        <RouteNewForm staff={staffList} vehicles={vehicleList} />
+        <RouteNewForm isEdit={isEdit} route={route} staff={staffList} vehicles={vehicleList} />
       </Container>
     </Page>
   );

@@ -41,7 +41,7 @@ export default function VehicleProfile() {
         <HeaderBreadcrumbs
           heading="Profile"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.dashboard },
+            { name: 'Dashboard', href: PATH_DASHBOARD.dashboard.root },
             { name: 'Vehicle Directory', href: PATH_DASHBOARD.dashboard.vehicles.directory },
             { name: `${vehicle.vehicleId}` }
           ]}

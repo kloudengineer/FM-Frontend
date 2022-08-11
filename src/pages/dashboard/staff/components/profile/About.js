@@ -49,6 +49,14 @@ export default function About({ staff }) {
             </Link>
           </Typography>
         </Stack>
+        {/* <Stack direction="row">
+          <IconStyle icon={emailFill} />
+          <Typography variant="body1">
+            <Link component="span" variant="subtitle3" color="text.primary">
+            { `${staff?.address[0].streetAddress1}, ${staff?.address[0].streetAddress2} ${staff?.address[0].city}, ${staff?.address[0].state} ${staff?.address[0].zipCode}` || 'Address' }
+            </Link>
+          </Typography>
+        </Stack> */}
       </Stack>
     </CardStyle>
   );

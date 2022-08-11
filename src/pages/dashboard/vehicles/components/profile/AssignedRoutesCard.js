@@ -74,7 +74,7 @@ export default function AssignedRoutesCard({ assignedRoutes }) {
               </TableHead>
               <TableBody>
                 {assignedRoutes.map((rt) => (
-                  <TableRow key={rt.Id}>
+                  <TableRow key={rt.routeID}>
                     <TableCell>{rt.routeID}</TableCell>
                     <TableCell sx={{ textTransform: 'capitalize' }}>{rt.customer}</TableCell>
                     <TableCell>{rt.driver}</TableCell>

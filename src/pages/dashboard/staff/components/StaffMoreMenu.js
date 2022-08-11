@@ -18,7 +18,7 @@ StaffMoreMenu.propTypes = {
   staffName: PropTypes.string
 };
 
-export default function StaffMoreMenu({ onDelete, staffName }) {
+export default function StaffMoreMenu({ onDelete, staffId }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function StaffMoreMenu({ onDelete, staffName }) {
 
         <MenuItem
           component={RouterLink}
-          to={`${PATH_DASHBOARD.dashboard.staff.directory}/${paramCase(staffName)}/edit`}
+          to={`${PATH_DASHBOARD.dashboard.staff.directory}/${staffId}/edit`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>
