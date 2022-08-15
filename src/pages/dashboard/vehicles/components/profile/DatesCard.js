@@ -1,9 +1,4 @@
 import PropTypes from 'prop-types';
-import { Icon } from '@iconify/react';
-
-import fileDoneOutlined from '@iconify/icons-ant-design/file-done-outlined';
-
-import pushpinFilled from '@iconify/icons-ant-design/pushpin-filled';
 // material
 import { styled } from '@mui/material/styles';
 import { Link, Card, Typography, CardHeader, Stack, Button } from '@mui/material';

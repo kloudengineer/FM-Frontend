@@ -37,7 +37,7 @@ import { MIconButton } from '../../../../../components/@material-extend';
 // ----------------------------------------------------------------------
 
 AssignedRoutesCard.propTypes = {
-  vehicle: PropTypes.object
+  assignedRoutes: PropTypes.object
 };
 
 export default function AssignedRoutesCard({ assignedRoutes }) {
@@ -77,7 +77,7 @@ export default function AssignedRoutesCard({ assignedRoutes }) {
                   <TableRow key={rt.routeID}>
                     <TableCell>{rt.routeID}</TableCell>
                     <TableCell sx={{ textTransform: 'capitalize' }}>{rt.customer}</TableCell>
-                    <TableCell>{rt.driver}</TableCell>
+                    <TableCell>{rt.driver?.firstName} {rt.driver?.lastName}</TableCell>
                     <TableCell>{handleDateFormat(rt.startDateTime)}</TableCell>
                     <TableCell>{handleDateFormat(rt.endDateTime)}</TableCell>
                     <TableCell>{sentenceCase(rt.status)}</TableCell>

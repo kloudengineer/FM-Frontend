@@ -30,9 +30,7 @@ export default function VehicleProfile() {
 
   useEffect(() => {
     dispatch(getProfile(id));
-    dispatch(findRoutes({
-      truck: id
-    }));
+    dispatch(findRoutes({}));
   }, [dispatch]);
 
   return (
@@ -41,9 +39,9 @@ export default function VehicleProfile() {
         <HeaderBreadcrumbs
           heading="Profile"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.dashboard.root },
+            { name: 'Dashboard', href: PATH_DASHBOARD.dashboard.overview },
             { name: 'Vehicle Directory', href: PATH_DASHBOARD.dashboard.vehicles.directory },
-            { name: `${vehicle.vehicleId}` }
+            { name: `${vehicle?.vehicleId}` }
           ]}
         />
         {
