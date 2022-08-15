@@ -8,13 +8,18 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, TextField, Typography, MenuItem } from '@mui/material';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { createVehicle } from '../../../../redux/slices/vehicles';
+import { createVehicle, updateVehicle } from '../../../../redux/slices/vehicles';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-export default function VehicleNewForm() {
+VehicleNewForm.propTypes = {
+  isEdit: PropTypes.bool,
+  vehicle: PropTypes.object
+};
+
+export default function VehicleNewForm({ isEdit, vehicle }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -39,26 +44,26 @@ export default function VehicleNewForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      vehicleId: '',
-      vehicleType: '',
-      vinNumber: '',
-      truckNumber: '',
-      plateNumber: '',
-      make: '',
-      model: '',
-      year: '',
-      latestInspectionDate: '',
-      latestMaintenanceDate: '',
-      latestAcquiryDate: '',
-      latestReturnDate: '',
-      buyOrRentalDate: '',
-      soldOrReturnDate: ''
+      vehicleId: vehicle?.vehicleId || '',
+      vehicleType: vehicle?.vehicleType || '',
+      vinNumber: vehicle?.vinNumber || '',
+      truckNumber: vehicle?.truckNumber || '',
+      plateNumber: vehicle?.plateNumber || '',
+      make: vehicle?.make || '',
+      model: vehicle?.model || '',
+      year: vehicle?.year || '',
+      latestInspectionDate: vehicle?.latestInspectionDate || '',
+      latestMaintenanceDate: vehicle?.latestMaintenanceDate || '',
+      latestAcquiryDate: vehicle?.latestAcquiryDate || '',
+      latestReturnDate: vehicle?.latestReturnDate || '',
+      buyOrRentalDate: vehicle?.buyOrRentalDate || '',
+      soldOrReturnDate: vehicle?.soldOrReturnDate || ''
     },
     validationSchema: NewVehicleSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(true);
-        await dispatch(createVehicle(values));
+        await dispatch(isEdit ? updateVehicle(vehicle._id, values) : createVehicle(values));
         resetForm();
         setSubmitting(false);
         enqueueSnackbar('Create success', { variant: 'success' });
@@ -204,7 +209,7 @@ export default function VehicleNewForm() {
               <Stack spacing={3}>
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create Vehicle
+                    { isEdit ? 'Update Vehicle' : 'Create Vehicle' }
                   </LoadingButton>
                 </Box>
               </Stack>

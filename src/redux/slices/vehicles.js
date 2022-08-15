@@ -104,6 +104,19 @@ export function createVehicle(payload) {
 
 // ----------------------------------------------------------------------
 
+export function updateVehicle(vehicleId, payload) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/vehicles/' + vehicleId, payload);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function deleteVehicle(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

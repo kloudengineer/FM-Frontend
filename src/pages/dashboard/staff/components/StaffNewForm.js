@@ -577,7 +577,7 @@ export default function StaffNewForm({ isEdit, staff }) {
               <Stack spacing={3}>
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create Staff
+                    { isEdit ? 'Update Staff' : 'Create Staff' }
                   </LoadingButton>
                 </Box>
               </Stack>

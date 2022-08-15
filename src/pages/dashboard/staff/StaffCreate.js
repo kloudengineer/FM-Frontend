@@ -40,7 +40,7 @@ export default function StaffCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Staff', href: PATH_DASHBOARD.dashboard.staff.directory },
-            { name: isEdit ? `Edit staff` : `Create staff` }
+            { name: isEdit ? `${staff?.firstName} ${staff?.lastName}` : `Create staff` }
           ]}
         />
 

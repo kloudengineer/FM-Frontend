@@ -8,6 +8,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import {
   Card,
+  Link,
   Table,
   Stack,
   Button,
@@ -39,7 +40,7 @@ import { RouteListHead, RouteListToolbar, RouteMoreMenu } from './components';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'routeID', label: 'ID', alignRight: false },
+  { id: 'routeID', label: 'Route ID', alignRight: false },
   { id: 'customer', label: 'Customer', alignRight: false },
   { id: 'startTime', label: 'Start Time', alignRight: false },
   { id: 'endTime', label: 'End Time', alignRight: false },
@@ -214,21 +215,51 @@ export default function RouteList() {
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              <Button
+                              <Link
                                 to={`${PATH_DASHBOARD.dashboard.routes.directory}/${_id}`}
                                 color="inherit"
+                                underline="none"
+                                variant="subtitle2"
                                 component={RouterLink}
                               >
                                 {routeID}
-                              </Button>
+                              </Link>
                             </Typography>
                           </Stack>
                         </TableCell>
                         <TableCell align="left">{customer}</TableCell>
                         <TableCell align="left">{startDateTime}</TableCell>
                         <TableCell align="left">{endDateTime}</TableCell>
-                        <TableCell align="left">{driver}</TableCell>
-                        <TableCell align="left">{truck}</TableCell>
+                        <TableCell align="left">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography variant="subtitle2" noWrap>
+                              <Link
+                                to={`${PATH_DASHBOARD.dashboard.staff.directory}/${driver?._id}`}
+                                color="inherit"
+                                underline="none"
+                                variant="subtitle2"
+                                component={RouterLink}
+                              >
+                                {driver?.firstName} {driver?.lastName}
+                              </Link>
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell align="left" noWrap>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography variant="subtitle2" noWrap>
+                              <Link
+                                to={`${PATH_DASHBOARD.dashboard.vehicles.directory}/${truck?._id}`}
+                                color="inherit"
+                                underline="none"
+                                variant="subtitle2"
+                                component={RouterLink}
+                              >
+                                {truck?.vehicleId}
+                              </Link>
+                            </Typography>
+                          </Stack>
+                        </TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -239,7 +270,7 @@ export default function RouteList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <RouteMoreMenu onDelete={() => handleDeleteRoute(_id)} routeID={routeID} />
+                          <RouteMoreMenu onDelete={() => handleDeleteRoute(_id)} routeID={_id} />
                         </TableCell>
                       </TableRow>
                     );

@@ -47,7 +47,7 @@ export default function RouteCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Route', href: PATH_DASHBOARD.dashboard.routes.directory },
-            { name: isEdit ? `Edit route` : `Create route` }
+            { name: isEdit ? route?.routeID : `Create route` }
           ]}
         />
 

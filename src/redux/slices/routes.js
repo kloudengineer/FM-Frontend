@@ -103,6 +103,19 @@ export function createRoute(payload) {
 
 // ----------------------------------------------------------------------
 
+export function updateRoute(routeId, payload) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/routes/' + routeId, payload);
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function deleteRoute(routeId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

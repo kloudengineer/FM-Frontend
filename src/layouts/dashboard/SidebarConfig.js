@@ -23,15 +23,7 @@ const sidebarConfig = [
       { title: 'Staff', path: PATH_DASHBOARD.dashboard.staff.directory, icon: ICONS.user },
       { title: 'Routes', path: PATH_DASHBOARD.dashboard.routes.directory, icon: ICONS.user },
       { title: 'Vehicles', path: PATH_DASHBOARD.dashboard.vehicles.directory, icon: ICONS.user }
-    ]
-  },
-
-  // Admin
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'admin',
-    items: [
-      { title: 'Carriers', path: PATH_DASHBOARD.admin.carriers, icon: ICONS.user }
+      
     ]
   }
 ];

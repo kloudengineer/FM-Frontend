@@ -232,7 +232,7 @@ export default function VehicleList() {
                         <TableCell align="left">{year}</TableCell>
 
                         <TableCell align="right">
-                          <VehicleMoreMenu onDelete={() => handleDeleteVehicle(_id)} vehicleId={vehicleId} />
+                          <VehicleMoreMenu onDelete={() => handleDeleteVehicle(_id)} vehicleId={_id} />
                         </TableCell>
                       </TableRow>
                     );

@@ -37,7 +37,7 @@ export default function RouteAbout({ route }) {
         <Stack direction="row">
           <IconStyle icon={carFilled} />
           <Typography variant="body1">
-            Vehicle: {route?.truck}
+            Vehicle: {route?.truck?.vehicleId}
           </Typography>
         </Stack>
 

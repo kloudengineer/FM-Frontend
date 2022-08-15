@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, IconButton, Box, Card, Grid, Stack, TextField, Typography, MenuItem } from '@mui/material';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { createRoute } from '../../../../redux/slices/routes';
+import { createRoute, updateRoute } from '../../../../redux/slices/routes';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 
@@ -49,28 +49,28 @@ export default function RouteNewForm({ isEdit, route, staff, vehicles }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      routeID: '',
-      routeNumber: '',
-      customer: '',
-      startDateTime: '',
-      endDateTime: '',
-      origin: '',
-      destination: '',
-      distance: 0,
-      stopAddresses: [
+      routeID: route?.routeID || '',
+      routeNumber: route?.routeNumber || '',
+      customer: route?.customer || '',
+      startDateTime: route?.startDateTime || '',
+      endDateTime: route?.endDateTime || '',
+      origin: route?.origin || '',
+      destination: route?.destination || '',
+      distance: route?.distance || 0,
+      stopAddresses: route?.stopAddresses || [
         {
           address: '',
           arrivalDateTime: ''
         }
       ],
-      driver: '',
-      truck: ''
+      driver: route?.driver?.firstName || '',
+      truck: route?.truck?.vehicleId || ''
     },
     validationSchema: NewRouteSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(true);
-        await dispatch(createRoute(values));
+        await dispatch(isEdit ? updateRoute(route._id, values) : createRoute(values));
         resetForm();
         setSubmitting(false);
         enqueueSnackbar('Create success', { variant: 'success' });
@@ -265,7 +265,7 @@ export default function RouteNewForm({ isEdit, route, staff, vehicles }) {
               <Stack spacing={3}>
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Create Route
+                    { isEdit ? 'Update Route' : 'Create Route' }
                   </LoadingButton>
                 </Box>
               </Stack>

@@ -5,7 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getVehicleList } from '../../../redux/slices/vehicles';
+import { getProfile } from '../../../redux/slices/vehicles';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -20,25 +20,32 @@ import VehicleNewForm from './components/VehicleNewForm';
 export default function VehicleCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { vehicleList } = useSelector((state) => state.vehicle);
+  const Params = useParams();
+  const { pathname } = useLocation();
+  const { vehicle } = useSelector((state) => state.vehicle);
+
+  const { id } = Params;
+  const isEdit = pathname.includes('edit');
 
   useEffect(() => {
-    dispatch(getVehicleList());
+    if(isEdit){ 
+      dispatch(getProfile(id));
+    }
   }, [dispatch]);
 
   return (
-    <Page title="Route: Create a new vehicle">
+    <Page title={isEdit ? `Vehicle: Edit vehicle` : `Vehicle: Create vehicle`}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading='Create a new vehicle'
+          heading={isEdit ? `Edit vehicle` : `Create a new vehicle`}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Vehicle', href: PATH_DASHBOARD.dashboard.vehicles.directory },
-            { name: 'New vehicle' }
+            { name: isEdit ? vehicle?.vehicleId : `Create vehicle` }
           ]}
         />
 
-        <VehicleNewForm />
+        <VehicleNewForm isEdit={isEdit} vehicle={vehicle} />
       </Container>
     </Page>
   );
