@@ -1,10 +1,10 @@
 // material
-import { Container, Grid, Stack } from '@mui/material';
+import { Container, Grid, Stack } from "@mui/material";
 // hooks
-import useAuth from '../../../hooks/useAuth';
-import useSettings from '../../../hooks/useSettings';
+import useAuth from "../../../hooks/useAuth";
+import useSettings from "../../../hooks/useSettings";
 // components
-import Page from '../../../components/Page';
+import Page from "../../../components/Page";
 import {
   AppWelcome,
   AppWidgets1,
@@ -18,9 +18,10 @@ import {
   AppTotalInstalled,
   AppCurrentDownload,
   AppTotalActiveUsers,
-  AppTopInstalledCountries
-} from '../../../components/_dashboard/general-app';
-
+  AppTopInstalledCountries,
+} from "../../../components/_dashboard/general-app";
+//test notif
+// import NotificationsPopover from "../notifications/NotificationsPopover";
 // ----------------------------------------------------------------------
 
 export default function Overview() {
@@ -29,7 +30,8 @@ export default function Overview() {
 
   return (
     <Page title="General: App | Minimal-UI">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      {/* <NotificationsPopover /> */}
+      <Container maxWidth={themeStretch ? false : "xl"}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <AppWelcome displayName={user.displayName} />

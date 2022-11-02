@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
-import { createContext, useEffect, useReducer, useState } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import axios from '../utils/axios';
-import { firebaseConfig } from '../config';
-
+import PropTypes from "prop-types";
+import { createContext, useEffect, useReducer, useState } from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import axios from "../utils/axios";
+import { firebaseConfig } from "../config";
 
 // ----------------------------------------------------------------------
 
@@ -17,17 +16,17 @@ if (!firebase.apps.length) {
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
 };
 
 const reducer = (state, action) => {
-  if (action.type === 'INITIALISE') {
+  if (action.type === "INITIALISE") {
     const { isAuthenticated, user } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
     };
   }
 
@@ -36,14 +35,14 @@ const reducer = (state, action) => {
 
 const AuthContext = createContext({
   ...initialState,
-  method: 'firebase',
+  method: "firebase",
   login: () => Promise.resolve(),
   register: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  logout: () => Promise.resolve(),
 });
 
 AuthProvider.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 function AuthProvider({ children }) {
@@ -52,9 +51,12 @@ function AuthProvider({ children }) {
 
   useEffect(
     () =>
-      firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
-          const docRef = firebase.firestore().collection('users').doc(user.uid);
+          const token = await user.getIdToken();
+          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+          const docRef = firebase.firestore().collection("users").doc(user.uid);
           docRef
             .get()
             .then((doc) => {
@@ -66,44 +68,80 @@ function AuthProvider({ children }) {
               console.error(error);
             });
 
-          user.getIdToken().then((token) => axios.defaults.headers.common['Authorization'] = "Bearer " + token)
-          
+          user
+            .getIdToken()
+            .then(
+              (token) =>
+                (axios.defaults.headers.common["Authorization"] =
+                  "Bearer " + token)
+            );
+
           dispatch({
-            type: 'INITIALISE',
-            payload: { isAuthenticated: true, user }
+            type: "INITIALISE",
+            payload: { isAuthenticated: true, user },
           });
         } else {
           dispatch({
-            type: 'INITIALISE',
-            payload: { isAuthenticated: false, user: null }
+            type: "INITIALISE",
+            payload: { isAuthenticated: false, user: null },
           });
         }
       }),
     [dispatch]
   );
 
-  const login = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
+  const login = (email, password) =>
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        user.getIdToken().then((token) => {
+          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        });
+      });
 
-  const register = async (email, password, firstName, lastName, phoneNumber, companyName, address, ein, dot) =>
+  const register = async (
+    email,
+    password,
+    firstName,
+    lastName,
+    phoneNumber,
+    companyName,
+    address,
+    ein,
+    dot
+  ) =>
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((res) => {
+      .then(async (res) => {
+        const { user } = res;
+        const token = await user.getIdToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
         firebase
           .firestore()
-          .collection('users')
+          .collection("users")
           .doc(res.user.uid)
           .set({
             uid: res.user.uid,
             email,
             displayName: `${firstName} ${lastName}`,
-            companyName: companyName
+            companyName: companyName,
           });
-        axios.post('/auth/register', {
-          uid: res.user.uid, email, firstName, lastName, phoneNumber, companyName, address, ein, dot
-        })
-      })
-  
+        axios.post("/auth/register", {
+          uid: res.user.uid,
+          email,
+          firstName,
+          lastName,
+          phoneNumber,
+          companyName,
+          address,
+          ein,
+          dot,
+        });
+      });
+
   const logout = async () => {
     await firebase.auth().signOut();
   };
@@ -118,19 +156,19 @@ function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         ...state,
-        method: 'firebase',
+        method: "firebase",
         user: {
           carrierUID: auth.uid,
           email: auth.email,
           photoURL: auth.photoURL || profile?.photoURL,
           displayName: auth.displayName || profile?.displayName,
           companyName: auth.companyName || profile?.companyName,
-          role: 'admin',
+          role: "admin",
         },
         login,
         register,
         logout,
-        resetPassword
+        resetPassword,
       }}
     >
       {children}
