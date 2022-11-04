@@ -82,13 +82,68 @@ function AuthProvider({ children }) {
     [dispatch]
   );
 
-  const login = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
+  const login = (email, password) =>
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        user.getIdToken().then((token) => {
+          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        });
+      });
 
+
+      useEffect(
+        () =>
+          firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+              const token = await user.getIdToken();
+              axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    
+              const docRef = firebase.firestore().collection("users").doc(user.uid);
+              docRef
+                .get()
+                .then((doc) => {
+                  if (doc.exists) {
+                    setProfile(doc.data());
+                  }
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+    
+              user
+                .getIdToken()
+                .then(
+                  (token) =>
+                    (axios.defaults.headers.common["Authorization"] =
+                      "Bearer " + token)
+                );
+    
+              dispatch({
+                type: "INITIALISE",
+                payload: { isAuthenticated: true, user },
+              });
+            } else {
+              dispatch({
+                type: "INITIALISE",
+                payload: { isAuthenticated: false, user: null },
+              });
+            }
+          }),
+        [dispatch]
+      );
+      
   const register = async (email, password, firstName, lastName, phoneNumber, companyName, address, ein, dot) =>
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((res) => {
+      .then(async (res) => {
+
+        const {user}= res;
+        const token = await  user.getIdToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        
         firebase
           .firestore()
           .collection('users')
@@ -99,6 +154,8 @@ function AuthProvider({ children }) {
             displayName: `${firstName} ${lastName}`,
             companyName: companyName
           });
+          
+        
         axios.post('/auth/register', {
           uid: res.user.uid, email, firstName, lastName, phoneNumber, companyName, address, ein, dot
         })

@@ -17,7 +17,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-image-lightbox/style.css';
 
 // editor
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 // slick-carousel

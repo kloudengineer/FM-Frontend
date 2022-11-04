@@ -74,7 +74,8 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { element: <Navigate to="/dashboard/overview" replace /> },
+        { element: <Navigate to="/pricing" replace /> },
+        
         { path: 'overview', element: <Overview /> },
 
         // Staff
@@ -93,16 +94,46 @@ export default function Router() {
         { path: 'vehicles', element: <VehicleDirectory /> },
         { path: 'vehicles/new', element: <VehicleCreate /> },
         { path: 'vehicles/:id', element: <VehicleProfile /> },
-        { path: 'vehicles/:id/edit', element: <VehicleCreate /> }
+        { path: 'vehicles/:id/edit', element: <VehicleCreate /> },
+     
+       
+      ]
+    },
+    //pricing route
+    {
+      path: 'pricing',
+      element: (
+        <AuthGuard>
+          <Pricing />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to="/pricing" replace /> },
+         //pricing
+         { path: 'pricing', element: <Pricing /> },
       ]
     },
 
-    // Main Routes
+   //Stripe/success 
+    {
+      path: 'stripe',
+      element: (
+        <AuthGuard>
+          <StripeSuccess />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to="/success" replace /> },
+         { path: 'success', element: <StripeSuccess /> },
+      ]
+    },
+     
+    // Main RoutesLogoOnlyLayout
     {
       path: '*',
-      element: <LogoOnlyLayout />,
+      element:<LogoOnlyLayout />,
+      
       children: [
-        { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
@@ -117,10 +148,12 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+       
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
+
 }
 
 // IMPORT COMPONENTS
@@ -158,4 +191,6 @@ const Pricing = Loadable(lazy(() => import('../pages/external/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/external/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/error/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/error/Page404')));
+const StripeSuccess = Loadable(lazy(() => import('../pages/external/StripeSuccess')));
+const StripeCancel = Loadable(lazy(() => import('../pages/external/StripeCancel')));
 

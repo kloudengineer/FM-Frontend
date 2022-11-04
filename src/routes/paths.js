@@ -6,7 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
-
+const ROOTS_PATH='/pricing'
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -18,8 +18,9 @@ export const PATH_AUTH = {
 };
 
 export const PATH_PAGE = {
+  root:ROOTS_PATH,
+  pricing: path(ROOTS_PATH, ''),
   components: '',
-  pricing: '/pricing',
   payment: '/payment',
   about: '/about-us',
   contact: '/contact-us',
