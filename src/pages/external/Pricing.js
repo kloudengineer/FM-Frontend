@@ -15,36 +15,34 @@ import data from "@iconify/icons-eva/arrow-ios-upward-fill";
 import { useDispatch, useSelector } from '../../redux/store';
 import { getPriceList } from '../../redux/slices/pricing';
 
-import { set } from 'lodash';
+import DashboardNavbar from "../../layouts/dashboard/DashboardNavbar";
 
 // ----------------------------------------------------------------------
 
 export default function Pricing({userSubscriptions}) {
-  
   const { priceList,isLoading} = useSelector((state) => state.price);
+
   const dispatch=useDispatch()
   
-  //Get prices List
   useEffect(()=>{
-      dispatch(getPriceList())
+    dispatch(getPriceList())
   },[dispatch])
 
-  
- 
+    
   const PLANS = [
     {
       subscription:priceList[0]?.nickname,
       icon: <PlanStarterIcon />,
-      price:(priceList[0]?.unit_amount/100).toLocaleString("in-US",{
+       price:(priceList[0]?.unit_amount/100).toLocaleString("in-US",{
         currency:"USD"
        }),
-      caption: 'monthly',
+       caption: 'monthly',
       lists: [
-        { text: '3 prototypes', isAvailable: true },
-        { text: '3 boards', isAvailable: true },
-        { text: 'Up to 5 team members', isAvailable: true },
-        { text: 'Advanced security', isAvailable: false },
-        { text: 'Permissions & workflows', isAvailable: false }
+        { text: 'complete fleet management system', isAvailable: true },
+        { text: 'support by kloud engineering', isAvailable: true },
+        { text: 'ready new feature', isAvailable: true },
+        { text: 'security', isAvailable: false },
+        { text: 'free Trail 14 days', isAvailable: false }
       ],
       labelAction: 'buy monthly'
     },
@@ -54,41 +52,44 @@ export default function Pricing({userSubscriptions}) {
       price:(priceList[1]?.unit_amount/100).toLocaleString("in-US",{
         currency:"USD"
        }),
-      caption: '6-months',
-      lists: [
-        { text: '3 prototypes', isAvailable: true },
-        { text: '3 boards', isAvailable: true },
-        { text: 'Up to 5 team members', isAvailable: true },
-        { text: 'Advanced security', isAvailable: false },
-        { text: 'Permissions & workflows', isAvailable: false }
-      ],
-      labelAction: 'buy six months'
-    },
-    {
-      subscription: priceList[2]?.nickname,
-      icon: <PlanPremiumIcon />,
-      price:(priceList[2]?.unit_amount/100).toLocaleString("in-US",{
-        currency:"USD"
-       }),
-      caption: 'yearly',
-      lists: [
-        { text: '3 prototypes', isAvailable: true },
-        { text: '3 boards', isAvailable: true },
-        { text: 'Up to 5 team members', isAvailable: true },
-        { text: 'Advanced security', isAvailable: true },
-        { text: 'Permissions & workflows', isAvailable: true }
+       caption: '6-months',
+       lists: [
+        { text: 'complete fleet management system', isAvailable: true },
+        { text: 'support by kloud engineering', isAvailable: true },
+        { text: 'ready new feature', isAvailable: true },
+        { text: 'security', isAvailable: false },
+        { text: 'free Trail 14 days', isAvailable: false }
+        ],
+        labelAction: 'buy plan 6-months'
+      },
+      {
+        subscription:priceList[2]?.nickname,
+        icon: <PlanPremiumIcon />,
+         price:(priceList[2]?.unit_amount/100).toLocaleString("in-US",{
+          currency:"USD"
+        }),
+        caption: 'yearly',
+        lists: [
+          { text: 'complete fleet management system', isAvailable: true },
+          { text: 'support by kloud engineering', isAvailable: true },
+          { text: 'ready new feature', isAvailable: true },
+          { text: 'security', isAvailable: false },
+          { text: 'free Trail 14 days', isAvailable: false }
       ],
       labelAction: 'buy yearly'
     }
   ];
+  
+
   const RootStyle = styled(Page)(({ theme }) => ({
     minHeight: '100%',
     paddingTop: theme.spacing(15),
     paddingBottom: theme.spacing(10)
   }));
-
+  
   return (
     <RootStyle title="Pricing | Minimal-UI">
+      <DashboardNavbar/>
       <Container maxWidth="lg">
         <Typography variant="h3" align="center" paragraph>
           Fleet Management System
@@ -111,6 +112,7 @@ export default function Pricing({userSubscriptions}) {
             * Plus applicable taxes
           </Typography>
         </Box>
+
 
         <Grid container spacing={3}>
           {PLANS.map((card, index) => (

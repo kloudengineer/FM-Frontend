@@ -1,4 +1,3 @@
-import { map, filter } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
@@ -9,7 +8,7 @@ const initialState = {
   isLoading: false,
   error: false,
   // subList: []
-  subStatusList: []
+  subscriptionList:[]
 };
 
 const slice = createSlice({
@@ -30,9 +29,9 @@ const slice = createSlice({
     // GET subs
 
 
-    getSubscriptionStatusSuccess(state, action) {
+    getSubscriptionSuccess(state, action) {
       state.isLoading = false;
-      state.subStatusList = action.payload;
+      state.subscriptionList = action.payload;
     },
   }
 });
@@ -42,12 +41,12 @@ export default slice.reducer;
 
 // ----------------------------------------------------------------------
 
-export function getSubscriptionStatus() {
+export function getSubscriptions() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/subscription-status');
-      dispatch(slice.actions.getSubscriptionStatusSuccess(response.data));
+      const response = await axios.get('/subscriptions');
+      dispatch(slice.actions.getSubscriptionSuccess(response.data.data));
     } catch (error) {
       console.log(error)
       dispatch(slice.actions.hasError(error));

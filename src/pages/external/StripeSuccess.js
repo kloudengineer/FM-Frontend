@@ -15,7 +15,7 @@ export default function StripeSuccess() {
           const { data } = await axios.get("/subscription-status");
 
           console.log("DATA===",data)
-          if (data.length === 0) {
+          if (data.length=== 0) {
            navigate('/pricing')
           } else {
             navigate('/dashboard/overview')

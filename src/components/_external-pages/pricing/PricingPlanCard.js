@@ -1,4 +1,4 @@
-import {useState,useEffect,useContext} from 'react'
+import {useState,useEffect} from 'react'
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -9,14 +9,12 @@ import { Card, Button, Typography, Box, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD,PATH_PAGE ,PATH_AUTH} from '../../../routes/paths';
 import Label from '../../Label';
-
 import { useNavigate, useRoutes, useLocation } from 'react-router-dom';
-
 import axios from '../../../utils/axios';
 // ----------------------------------------------------------------------
-import {getSubscriptionStatus}from '../../../redux/slices/subscriptions';
+import {getSubscriptions}from '../../../redux/slices/subscriptions';
+import {getPriceList}from '../../../redux/slices/pricing';
 import { useDispatch, useSelector } from '../../../redux/store';
-
 const RootStyle = styled(Card)(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
@@ -40,40 +38,47 @@ PricingPlanCard.propTypes = {
 export default function PricingPlanCard({ card, index}) {
 
   const navigate=useNavigate()
+
   const [userSubscriptions,setUserSubscriptions]=useState([])
-  
-  const {subStatusList} = useSelector((state) => state.subscription);
+ 
+  const dispatch=useDispatch()
+  const {subscriptionList} = useSelector((state) => state.subscription);
   const { priceList,isLoading} = useSelector((state) => state.price);
   
-  const dispatch=useDispatch()
-
+  
   const { subscription, icon, price, caption, lists, labelAction } = card;
   
+  
+  useEffect(()=>{
+    dispatch(getPriceList())
+  },[dispatch])  
 
 
   useEffect(()=>{
-    dispatch(getSubscriptionStatus())
+    dispatch(getSubscriptions())
   },[dispatch])
   
 
+  
   useEffect(() => {
     let result = [];
     const check = () =>
-     subStatusList.subscriptions?.map((sub) => {
+    subscriptionList?.map((sub) => {
       result.push(sub?.plan.id)
-      });
+    });
     check();
-    setUserSubscriptions(result);
-  }, [subStatusList.subscriptions]);
+      setUserSubscriptions(result);
+  }, [subscriptionList]);
 
   
     const handleSubscription=async(e,priceList)=>{
       e.preventDefault()  
       const priceId=[priceList[0]?.id,priceList[1]?.id, priceList[2]?.id]
 
-      //checks if user subscribed
-      if (userSubscriptions.includes(index===0 && priceId[0] || index===1 && priceId[1] || index===2 && priceId[2])){
+       if(userSubscriptions.includes(index===0 && priceId[0] || index===1 && priceId[1] || index===2 && priceId[2])){
+         setTimeout(()=>{
           navigate('/dashboard/overview');
+         },1000)
         return;
       }
       
@@ -176,7 +181,7 @@ export default function PricingPlanCard({ card, index}) {
           </Stack>
         ))}
       </Stack>
-
+      
       <Button
        onClick={
         (e)=>handleSubscription(e,priceList)}
@@ -185,7 +190,7 @@ export default function PricingPlanCard({ card, index}) {
         variant={index===0?'outlined':'contained'}
       >
         {userSubscriptions.includes(index===0 && priceList[0]?.id || index===1 && priceList[1]?.id || index===2 && priceList[2]?.id)
-                ? "Access plan" : labelAction}
+                ? "Access plan" : labelAction}          
       </Button>
     </RootStyle>
   );

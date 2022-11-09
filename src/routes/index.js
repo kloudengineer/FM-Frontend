@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import React, { Suspense, lazy} from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
@@ -7,9 +7,14 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
+
+//subscription
+import UserSubscription from 'src/guards/UserSubscription';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import { isEmpty } from 'lodash';
+
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +45,8 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
+
+
   return useRoutes([
     {
       path: 'auth',
@@ -64,14 +71,16 @@ export default function Router() {
         { path: 'verify', element: <VerifyCode /> }
       ]
     },
-
     // Dashboard Routes
     {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <UserSubscription>
+          <DashboardLayout />   
+        </UserSubscription>
         </AuthGuard>
+       
       ),
       children: [
         { element: <Navigate to="/pricing" replace /> },
